@@ -28,7 +28,7 @@ body
 	font-size 12pt
 	color #222
 	background-image url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAMCAMAAABP7o1HAAAACVBMVEXx8fHv7+/y8vLz1QQmAAAAO0lEQVR42nWPAQoAIAgD1f8/OqlDiMPBYKk7KFoZ9fmpGOQc3FmLh5oEN80nm082H5uPzcfi01x/vi4OcRwAu6bHHywAAAAASUVORK5CYII=");
-	margin-top 90px
+	margin-top 100px
 
 body, body *
 	font-family '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
@@ -58,6 +58,9 @@ hr
 
 .hidden
 	display none
+
+.vhidden
+	visibility hidden
 
 ::selection
 	background-color #ffa
@@ -125,7 +128,6 @@ footer
 		background-color #ffc
 		color #663
 
-
 .menuwrapper
 	// padding-top 5px
 	background-color $black2
@@ -137,8 +139,8 @@ footer
 		.divider
 			width 90%
 			color $black1
-		#mainmenu
-			.item
+		.menu-main
+			.menu-item
 				display block
 				padding 5px 20px
 				font-size 12pt
@@ -149,6 +151,25 @@ footer
 					content '>'
 					float right
 					font-size 10pt
+		.menu-anilist-more
+			display table
+			width 100%
+			.menu-item
+				display table-cell
+				width 33.333%
+				padding 7px 5px
+				text-align center
+				color $text-color3
+				white-space nowrap
+				&:hover
+					background-color lighten($black1, 5%)
+				&.highlight
+					border-bottom 3px solid lighten($black1, 30%)
+					font-weight bold
+			.divider
+				width 1px
+				height 12px
+				background-color lighten($black1, 5%)
 		#today
 			text-align center
 			.date
@@ -193,12 +214,11 @@ footer
 		display table-cell
 		text-align center
 		margin 0
-		padding 5px
+		padding 7px 5px
 		color $text-color3
 		&.highlight
 			border-bottom 3px solid $green2
 			font-weight bold
-			color $text-color3
 		&:not(.highlight)
 			border-bottom 3px solid $black1
 		&:hover
@@ -259,3 +279,112 @@ footer
 			background-color #f6f6f6
 	&:empty
 		display none
+
+// --- ani detail ---
+main.main-ani-detail
+	hr
+		border-color #ddd
+	.header
+		padding 10px 0
+		.title
+			margin 0 20px 10px
+			.text
+				font-size 16pt
+				color $text-color1
+			.state
+				margin 5px
+				font-size 12pt
+				color $text-color2
+		.info
+			display table
+			width 100%
+			padding 0 20px
+			.text, .imagecell
+				display table-cell
+			.text
+				width 80%
+				font-size 12pt
+				color $text-color2
+				.row
+					border-top 1px solid #eee
+					padding 10px 0
+					.label
+						font-size 10pt
+						float left
+					.value
+						text-align right
+					&:first-of-type
+						border-top 0
+			.imagecell
+				.image
+					vertical-align top
+					margin-left 20px
+					padding 5px
+					outline 1px solid #ccc
+			@media screen and (max-width 500px)
+				.text, .imagecell
+					display block
+					width 100%
+				.imagecell
+					text-align center
+				.image
+					margin-left 0
+		.divider
+			color #eee
+			width 95%
+			margin-top 0
+			margin-bottom 0
+			&:last-of-type
+				display none
+
+	.content
+		margin 5px 20px
+		.notfound
+			padding 10px
+			text-align center
+			font-size 10pt
+		.group-name
+			padding 5px 0 3px
+			border-bottom 2px solid #eee
+			color $text-color2
+			font-size 10pt
+		.captions
+			display table
+			border-collapse collapse
+			width 100%
+			.caption
+				display table-row
+				line-height 150%
+				border-top 1px solid #eee
+				.episode, .name, .updateat
+					display table-cell
+				.episode, .name
+					padding 10px 5px
+					color $text-color1
+				.episode
+					width 60px
+					text-align right
+				.updateat
+					text-align right
+					font-size 10pt
+					color $text-color2
+				&:first-of-type
+					border-top 0
+				&.no-url
+					.episode, .name
+						color $text-color2
+		.links
+			.link
+				display block
+				padding 10px
+				border-top 1px solid #eee
+				color $text-color1
+				&:after
+					content '>'
+					float right
+					font-size 10pt
+					color $text-color2
+				&:first-of-type
+					border-top 0
+		.share
+			padding 20px

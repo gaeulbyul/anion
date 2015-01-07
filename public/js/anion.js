@@ -14,11 +14,18 @@ var AniONUtils = {
 		return moment(date8, 'YYYYMMDD YYYYMM YYYY'.split(' '));
 	},
 	formatDate: function (date8m) {
-		return date8m.format({
-			'YYYYMMDD': 'YYYY/MM/DD',
-			'YYYYMM': 'YYYY/MM',
-			'YYYY': 'YYYY'
-		}[date8m._f]);
+		if (typeof date8m == 'string') {
+			date8m = AniONUtils.parseDate2(date8m);
+		}
+		if (moment.isMoment(date8m) && date8m.isValid()) {
+			return date8m.format({
+				'YYYYMMDD': 'YYYY년 MM월 DD일',
+				'YYYYMM': 'YYYY년 MM월',
+				'YYYY': 'YYYY년',
+			}[date8m._f]);
+		} else {
+			return '???';
+		}
 	},
 	formatTime: function (time4) {
 		var mtime = moment(time4, 'HHmm');
@@ -28,15 +35,122 @@ var AniONUtils = {
 			return '???';
 		}
 	},
+	makeItem: function (ani, params) {
+		var today = moment().format('YYYYMMDD');
+		var item = {
+			// json: JSON.stringify(ani,null,2), // DEBUG
+			id: ani.id,
+			weekday: ani.weekday,
+			title: ani.title,
+			genre: ani.genre,
+			time: ani.time,
+			ended: ani.ended,
+			state: '',
+			startdate: ani.startdate,
+			enddate: ani.enddate,
+			amode: params.amode,
+		};
+		var startdate = AniONUtils.parseDate(ani.startdate);
+		var enddate = AniONUtils.parseDate(ani.enddate);
+		if (ani.weekday < 7) {
+			// coming soon
+			if (startdate.isValid() && today < ani.startdate) {
+				item.comingsoon = startdate.format('ll');
+				if (params.amode != 'd') {
+					item.state = '[' + (
+						startdate.format('MM/DD')
+					) + ']';
+				}
+			}
+			//completed
+			if (enddate.isValid() && today >= ani.enddate) {
+				item.state = '(완결)';
+			}
+			// absent
+			if (!ani.ended && !ani.broaded) {
+				item.state = '(결방)';
+			}
+		}
+		/*
+		else {
+			startdate = AniONUtils.parseDate2(ani.startdate);
+			enddate = AniONUtils.parseDate2(ani.enddate);
+			if (startdate.isValid()) {
+				item.startdate = AniONUtils.formatDate(startdate);
+			} else {
+				item.startdate = '방영일 불명';
+			}
+		}
+		*/
+		return item;
+	},
 }
 
-var AniON = angular.module('AniON', []);
+
+angular.module('AniONFilters', []).filter({
+	weekday1: function () {return function (input) {
+		return '일월화수목금토외신종'[input];
+	}},
+	weekday: function() {return function (input) {
+		return '일요일 월요일 화요일 수요일 목요일 금요일 토요일 기타 신작 종영'.split(' ')[input];
+	}},
+	time4: function() {return AniONUtils.formatTime},
+	date8: function() {return AniONUtils.formatDate},
+	datetime14: function (){return function (input) {
+		var m = moment(input, 'YYYYMMDDHHmmss');
+		if (m.isValid()) {
+			// return m.format('YYYY/MM/DD HH:mm:ss');
+			return m.format('YYYY/MM/DD A h:mm:ss');
+		} else {
+			return '???';
+		}
+	}},
+	genre: function() {return function (input) {
+		if (Array.isArray(input) && input.length > 0 && !!input[0]) {
+			return input.join(' / ');
+		} else {
+			return '장르 미정';
+		}
+	}},
+});
+
+var AniON = angular.module('AniON', [
+	'ngRoute',
+	'MainCtrlers',
+]);
+
+AniON
+	.config(function ($routeProvider) {
+		$routeProvider
+			.when('/', {
+				template: document.getElementById('T-anilist').innerHTML,
+				controller: 'AniListCtrler',
+			})
+			.when('/ani/:id', {
+				template: document.getElementById('T-anidetail').innerHTML,
+				controller: 'AniDetailCtrler',
+			})
+			.otherwise({
+				redirectTo: '/',
+			});
+	})
+	.run(function ($location, AniListFactory) {
+		if ($location.path() == '/') {
+			var weekday = new Date().getDay();
+			AniListFactory.getAniList(weekday);
+		}
+	})
+;;
 
 AniON.factory('AniListFactory', function($rootScope, $http) {
 	var current_weekday;
 	var current_query;
 	return {
 		anis: [],
+		recent: {},
+		getRecentAniList: function () {
+			this.broadcastAniList(this.recent);
+		},
 		getAniList: function (weekday, page) {
 			var self = this;
 			if (weekday == -1) {
@@ -89,96 +203,113 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 		},
 		broadcastAniList: function (params) {
 			// http://stackoverflow.com/a/11847277
+			// console.log('recent? %s', this.recent.recent); XXX
+			this.recent = params;
 			$rootScope.$broadcast('gotAniList', params);
-		}
+			this.recent.recent = true;
+		},
 	};
 });
 
-AniON.controller('AniListCtrler', function ($scope, AniListFactory) {
-	var weekday = new Date().getDay();
-	AniListFactory.getAniList(weekday);
-	$scope.$on('gotAniList', function (event, params) {
-		var today = moment().format('YYYYMMDD');
-		$scope.anis = AniListFactory.anis.map(function (ani) {
-			var item = {
-				// json: JSON.stringify(ani,null,2), // DEBUG
-				id: ani.id,
-				state: '',
-				title: ani.title,
-				genre: ani.genre.join(' / '),
-				time: '',
-				startdate: '',
-				enddate: '',
-				weekday: '',
-			};
-			var startdate = AniONUtils.parseDate(ani.startdate);
-			var enddate = AniONUtils.parseDate(ani.enddate);
-			if (params.amode == 's') {
-				item.weekday = '일월화수목금토외신'.split('')[ani.weekday];
-			}
-			if (params.weekday < 7) {
-				item.time = AniONUtils.formatTime(ani.time);
-				// coming soon
-				if (startdate.isValid() && today < ani.startdate) {
-					item.state = '[' + (
-						startdate.format('MM/DD')
-					) + ']';
-				}
-				//completed
-				if (enddate.isValid() && today >= ani.enddate) {
-					item.state = '(완결)';
-				}
-				// absent
-				if (!ani.ended && !ani.broaded) {
-					item.state = '(결방)';
-				}
-			} else {
-				startdate = AniONUtils.parseDate2(ani.startdate);
-				enddate = AniONUtils.parseDate2(ani.enddate);
-				if (startdate.isValid()) {
-					item.time = AniONUtils.formatDate(startdate);
-				} else {
-					item.time = '방영일 불명';
-				}
-			}
-			return item;
-		});
-	});
-	// $scope.showAniList = function (data) {
-	// 	$scope.anis = data;
-	// }
+AniON.factory('AniDetailFactory', function ($rootScope, $http) {
+	return {
+		ani: [],
+		getAniDetail: function (id) {
+			var self = this;
+			return $http.get('/api/ani/?id='+id)
+				.success(function(r){
+					self.ani = r;
+					self.broadcastAniDetail();
+				})
+				.error(function(r) {
+					console.error(r);
+				})
+			;;
+		},
+		broadcastAniDetail: function (params) {
+			$rootScope.$broadcast('gotAniDetail' /*, params */);
+		},
+	};
 });
 
-AniON.controller('TitlebarCtrler', function ($scope, AniListFactory) {
+AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
+	return {
+		caps: [],
+		getCaptions: function (id) {
+			var self = this;
+			return $http.get('/api/cap/?id='+id)
+				.success(function(r){
+					self.caps = r;
+					self.broadcastAniCaptions();
+				})
+				.error(function(r) {
+					console.error(r);
+				})
+			;;
+		},
+		broadcastAniCaptions: function (params) {
+			$rootScope.$broadcast('gotAniCaptions' /*, params */);
+		},
+	};
+});
+
+AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniListFactory) {
 	//http://stackoverflow.com/q/12618342
 	$scope.formdata = {};
 	$scope.menuVisible = false;
-	$scope.toggleMenu = function (h) {
+	$scope.leftIsBack = false;
+	$scope.toggleMenu = function ($event) {
 		$scope.menuVisible = !$scope.menuVisible;
 	}
 	$scope.currentWeekday = null;
-	$scope.$on('gotAniList', function (e, params) {
+	$scope.currentPage = null;
+	$scope.$on('gotAniList', function (event, params) {
 		$scope.currentWeekday = params.weekday;
+		$scope.currentPage = params.page;
 		$scope.menuVisible = false;
+		$scope.leftIsBack = false;
 	});
+	$scope.$on('gotAniDetail', function (event, params) {
+		$scope.leftIsBack = true;
+	});
+	$scope.goBack = function ($event) {
+		// $scope.showWeekday($scope.currentWeekday, $scope.currentPage);
+		$window.history.back();
+	};
 	$scope.showWeekday = function ($event, weekday) {
 		// var target = $event.currentTarget;
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
-	}
+	};
 	$scope.searchAniList = function ($event) {
 		// var target = $event.currentTarget;
 		AniListFactory.searchAniList($scope.formdata.query);
 		window.scrollTo(0, 0);
-	}
+	};
 });
 
-AniON.controller('AniListPageCtrler', function ($scope, AniListFactory) {
-	$scope.pages = [];
-	$scope.current_page = null;
-	$scope.$on('gotAniList', function (e, params) {
-		// TODO: fix current-page highlight on switch weekday
-		// TODO: hide page when pages.length < 2
+var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
+
+MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
+	// $scope.anis = [];
+	$scope.init = function () {
+		AniListFactory.getRecentAniList();
+	}
+	$scope.$on('gotAniList', function (event, params) {
+		$scope.anis = AniListFactory.anis.map(function (ani) {
+			return AniONUtils.makeItem(ani, params);
+		});
+		document.getElementById('main').className = 'main-ani-list';
+	});
+});
+
+MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
+	// $scope.pages = [];
+	// $scope.current_page = null;
+	$scope.init = function () {
+		AniListFactory.getRecentAniList();
+	}
+	$scope.$on('gotAniList', function (event, params) {
 		var count = params.count;
 		$scope.current_page = params.page;
 		$scope.current_listmode = params.amode;
@@ -191,4 +322,25 @@ AniON.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 		AniListFactory[($scope.current_listmode == 'w' ? 'get' : 'search')+'AniList'](-1, page);
 		window.scrollTo(0, 0);
 	}
+});
+
+MainCtrlers.controller('AniDetailCtrler', function ($scope, $routeParams, AniDetailFactory, AniCaptionFactory) {
+	$scope.ani = {};
+	$scope.caps = {};
+	$scope.$on('$routeChangeSuccess', function (event) {
+		var id = $routeParams.id;
+		AniDetailFactory.getAniDetail(id);
+		AniCaptionFactory.getCaptions(id);
+	});
+	$scope.$on('gotAniDetail', function (event) {
+		$scope.ani = AniONUtils.makeItem(AniDetailFactory.ani, {amode: 'd'});
+		document.getElementById('main').className = 'main-ani-detail';
+	});
+	$scope.$on('gotAniCaptions', function (event) {
+		// $scope.caps = AniCaptionFactory.caps;
+		$scope.caps = AniCaptionFactory.caps.map(function (c) {
+			c.json = JSON.stringify(c,null,2);
+			return c;
+		});
+	})
 });

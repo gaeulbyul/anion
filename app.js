@@ -3,6 +3,7 @@ var express = require('express');
 var morgan = require('morgan');
 var config = require('./config');
 var AniONDB = require('./model/aniondb');
+var Anissia = require('./lib/anissia');
 
 var app = express();
 
@@ -42,6 +43,30 @@ route.get('/api/anilist', function(req, res, next) {
 			count: count,
 		};
 		return res.status(200).json(result);
+	});
+});
+
+route.get('/api/ani', function(req, res, next) {
+	var aniID = req.query.id;
+	if (!/^\d+$/.test(aniID)) {
+		return res.status(400).send('invalid!');
+	}
+	AniONDB.Ani.getAni(aniID, function (err, dat) {
+		if (err) {
+			return res.status(500);
+		}
+		return res.status(!!dat ? 200 : 404).json(dat);
+	})
+});
+
+route.get('/api/cap', function(req, res, next) {
+	var aniID = req.query.id;
+	Anissia.getAni(aniID, function (err, body) {
+		if (err) {
+			return res.status(500).send(err);
+		} else {
+			return res.status(200).json(body);
+		}
 	});
 });
 
