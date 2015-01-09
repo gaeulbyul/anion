@@ -135,9 +135,9 @@ AniON
 			});
 	})
 	.run(function ($location, AniListFactory) {
-		if ($location.path() == '/') {
-			var weekday = new Date().getDay();
-			AniListFactory.getAniList(weekday);
+		var path = $location.path();
+		if (path == '' || path == '/') {
+			AniListFactory.getTodayAniList();
 		}
 	})
 ;;
@@ -172,9 +172,13 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 					});
 				})
 				.error(function(r) {
-					console.error(r);
+					// console.error(r);
 				})
 			;;
+		},
+		getTodayAniList: function () {
+			var weekday = new Date().getDay();
+			return this.getAniList(weekday);
 		},
 		searchAniList: function (query, page) {
 			var self = this;
@@ -222,7 +226,7 @@ AniON.factory('AniDetailFactory', function ($rootScope, $http) {
 					self.broadcastAniDetail();
 				})
 				.error(function(r) {
-					console.error(r);
+					// console.error(r);
 				})
 			;;
 		},
@@ -257,23 +261,27 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	//http://stackoverflow.com/q/12618342
 	$scope.formdata = {};
 	$scope.menuVisible = false;
-	$scope.leftIsBack = false;
 	$scope.toggleMenu = function ($event) {
 		$scope.menuVisible = !$scope.menuVisible;
 	}
+	$scope.currentMode = null;
 	$scope.currentWeekday = null;
 	$scope.currentPage = null;
+	$scope.currentQuery = null;
 	$scope.$on('gotAniList', function (event, params) {
-		$scope.currentWeekday = params.weekday;
 		$scope.currentPage = params.page;
+		$scope.currentMode = params.amode;
+		if (params.amode == 'w') {
+			$scope.currentWeekday = params.weekday;
+			$scope.currentQuery = null;
+		} else if (params.amode == 's') {
+			$scope.currentWeekday = null;
+			$scope.currentQuery = params.query;
+		}
 		$scope.menuVisible = false;
 		$scope.leftIsBack = false;
 	});
-	$scope.$on('gotAniDetail', function (event, params) {
-		$scope.leftIsBack = true;
-	});
 	$scope.goBack = function ($event) {
-		// $scope.showWeekday($scope.currentWeekday, $scope.currentPage);
 		$window.history.back();
 	};
 	$scope.showWeekday = function ($event, weekday) {
@@ -283,6 +291,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	};
 	$scope.searchAniList = function ($event) {
 		// var target = $event.currentTarget;
+		$location.path('/');
 		AniListFactory.searchAniList($scope.formdata.query);
 		window.scrollTo(0, 0);
 	};
@@ -296,9 +305,13 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 		AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
-		$scope.anis = AniListFactory.anis.map(function (ani) {
-			return AniONUtils.makeItem(ani, params);
-		});
+		if (AniListFactory.anis.length > 0) {
+			$scope.anis = AniListFactory.anis.map(function (ani) {
+				return AniONUtils.makeItem(ani, params);
+			});
+		} else {
+			AniListFactory.getTodayAniList();
+		}
 		document.getElementById('main').className = 'main-ani-list';
 	});
 });
@@ -324,12 +337,26 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 	}
 });
 
-MainCtrlers.controller('AniDetailCtrler', function ($scope, $routeParams, AniDetailFactory, AniCaptionFactory) {
+MainCtrlers.controller('AniDetailCtrler',
+	function ($scope, $routeParams, $window, AniDetailFactory, AniCaptionFactory)
+{
+	$scope.nourl = 'javascript:'
 	$scope.ani = {};
 	$scope.caps = {};
+	$scope.checklink = function (event, url) {
+		if (!url) {
+			event.preventDefault();
+			alert('주소가 등록되어있지 않습니다.');
+		}
+	}
 	$scope.$on('$routeChangeSuccess', function (event) {
 		var id = $routeParams.id;
-		AniDetailFactory.getAniDetail(id);
+		AniDetailFactory.getAniDetail(id)
+			.error(function (r) {
+				alert('찾을 수 없습니다!');
+				$window.history.back();
+			})
+		;;
 		AniCaptionFactory.getCaptions(id);
 	});
 	$scope.$on('gotAniDetail', function (event) {
