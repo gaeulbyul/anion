@@ -2,7 +2,9 @@
 var app = require('../app');
 var config = require('../config');
 
-process.title = config.p_title;
+if (config.p_title) {
+	process.title = config.p_title;
+}
 
 app.set('port',  config.port || 8081);
 
