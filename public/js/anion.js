@@ -161,7 +161,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			if (typeof page == 'undefined') {
 				page = 1;
 			}
-			return $http.get('/api/anilist/?weekday='+weekday+'&page='+page)
+			return $http.get('api/anilist/?weekday='+weekday+'&page='+page)
 				.success(function(r){
 					self.anis = r.result;
 					self.broadcastAniList({
@@ -190,7 +190,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			if (typeof page == 'undefined') {
 				page = 1;
 			}
-			return $http.get('/api/anilist/?search='+encodeURIComponent(query)+'&page='+page)
+			return $http.get('api/anilist/?search='+encodeURIComponent(query)+'&page='+page)
 				.success(function(r){
 					self.anis = r.result;
 					self.broadcastAniList({
@@ -220,7 +220,7 @@ AniON.factory('AniDetailFactory', function ($rootScope, $http) {
 		ani: [],
 		getAniDetail: function (id) {
 			var self = this;
-			return $http.get('/api/ani/?id='+id)
+			return $http.get('api/ani/?id='+id)
 				.success(function(r){
 					self.ani = r;
 					self.broadcastAniDetail();
@@ -241,7 +241,7 @@ AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
 		caps: [],
 		getCaptions: function (id) {
 			var self = this;
-			return $http.get('/api/cap/?id='+id)
+			return $http.get('api/cap/?id='+id)
 				.success(function(r){
 					self.caps = r;
 					self.broadcastAniCaptions();
