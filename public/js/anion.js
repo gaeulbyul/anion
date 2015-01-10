@@ -342,7 +342,7 @@ MainCtrlers.controller('AniDetailCtrler',
 {
 	$scope.nourl = 'javascript:'
 	$scope.ani = {};
-	$scope.caps = {};
+	$scope.caps = [];
 	$scope.checklink = function (event, url) {
 		if (!url) {
 			event.preventDefault();

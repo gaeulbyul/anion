@@ -17,7 +17,7 @@
 						<img alt="메뉴" height="20" src="img/left.svg">
 					</a>
 					<div class="title">
-						<a href=".">asdf</a>
+						<a href=".">Ani-ON</a>
 					</div>
 					<a id="right-button" class="button" ng-click="toggleMenu($event)">
 						<img alt="메뉴" height="20" src="img/menu.svg">
@@ -139,7 +139,7 @@
 			</div>
 			<hr>
 			<div class="content">
-				<div class="group-name">자막</div>
+				<div class="group-name">자막 ({{caps.length}}개)</div>
 					<div class="group captions">
 						<a class="caption" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" href="{{cap.url}}" title="{{cap.url}}" ng-repeat="cap in caps track by $index">
 							<div class="episode">{{cap.episode}}화</div>
