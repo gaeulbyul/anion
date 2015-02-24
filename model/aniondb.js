@@ -1,72 +1,84 @@
-var mongoose = require('mongoose');
+var Sequelize = require('sequelize');
 var format = require('util').format;
+
 RegExp.escape = function RegExp__escape (t) {
 	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 	return t.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
-var AniONDB = {};
+function AniONDB (dbconfig) {
+	this.config = {
+		name: dbconfig.name,
+		username: dbconfig.username,
+		password: dbconfig.password,
+		host: dbconfig.host,
+	};
+	console.log(JSON.stringify(this.config,0,4));
+	this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, {
+		host: this.config.host,
+		dialect: 'postgres',
+	});
+	this.seq.authenticate()
+		.complete(function(err) {
+			if (err) {
+				console.error('Error on connection db: %s', err);
+			}
+		})
+	;;
+	this.Ani = this.seq.define('Ani', {
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+		},
+		index: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+			unique: true,
+		},
+		weekday: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+		},
+		title: {
+			type: Sequelize.STRING,
+			allowNull: false,
+		},
+		time: {
+			type: Sequelize.STRING(4),
+			defaultValue: '0000',
+		},
+		ended: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false,
+		},
+		homepage: Sequelize.STRING,
+		broaded: Sequelize.BOOLEAN,
+		startdate: {
+			type: Sequelize.STRING(8),
+			defaultValue: '00000000',
+		},
+		enddate: {
+			type: Sequelize.STRING(8),
+			defaultValue: '00000000',
+		},
+	}, {
+		freezeTableName: true,
+		tableName: 'ani',
+	});
 
-AniONDB.connect = function(url, recon) {
-	this.mongourl = 'mongodb://' + url;
-	this.recon = !!recon;
-	mongoose.connect(this.mongourl);
+	this.Genre = this.seq.define('Genre', {
+		id: Sequelize.INTEGER,
+		anime_id: Sequelize.INTEGER,
+		genre: Sequelize.STRING,
+	}, {
+		freezeTableName: true,
+		tableName: 'ani_genres',
+	});
 };
 
-AniONDB.disconnect = function() {
-	mongoose.disconnect();
-};
 
-mongoose.connection.on('disconnected', function() {
-	if (AniONDB.recon) {
-		AniONDB.connect(AniONDB.mongourl);
-	}
-});
 
-AniONDB.rAniSchema = {
-	index: Number,
-	weekday: Number,
-	id: {
-		type: Number,
-		unique: true,
-		required: true
-	},
-	title: {
-		type: String,
-		unique: true,
-		required: true
-	},
-	genre: [String],
-	time: String,
-	ended: Boolean,
-	homepage: String,
-	broaded: Boolean,
-	startdate: String, // because invalid date like 20149999
-	enddate: String,
-	links: {
-		rigveda: String,
-		animeta: String,
-		wiki_chan: String,
-		onnada: Number,
-		myanimelist: Number,
-		ann: Number,
-		anime_planet: String,
-		anidb: Number,
-		wiki_ko: String,
-		wiki_en: String,
-		wiki_ja: String
-	},
-	images: [String]
-}
-
-AniONDB.AniSchema = new mongoose.Schema(AniONDB.rAniSchema, {
-	toObject: {
-		virtuals: false
-	},
-	toJSON: {
-		virtuals: true
-	}
-});
+/*
 
 AniONDB.AniSchema.statics = {
 	searchAni: function(condi, page, callback) {
@@ -191,5 +203,7 @@ AniONDB.AniSchema.methods.getLink = function(sitename) {
 };
 
 AniONDB.Ani = mongoose.model('Ani', AniONDB.AniSchema);
+*/
 
 module.exports = AniONDB;
+

@@ -1,17 +1,12 @@
-var fs = require('fs');
-var cson = require('cursive');
+var env = process.env;
 
-var filename = __dirname + '/config.cson'
-
-var cfg = {};
-try {
-	cfg = cson.parse(fs.readFileSync(filename));
-} catch(e) {
-	// use env-var
-	cfg = {};
-	cfg.port = process.env.ANION_PORT;
-	cfg.mongodb_url = process.env.ANION_MONGODB;
-	cfg.env = process.env.ANION_ENV;
-}
-
-module.exports = cfg;
+module.exports = {
+	port: env.ANION_PORT || 8081,
+	env: env.ANION_ENV || 'development',
+	database: {
+		host: env.ANION_DB_HOST || 'localhost',
+		name: env.ANION_DB_NAME || 'anion',
+		username: env.ANION_DB_USERNAME || 'zn1707',
+		password: env.ANION_DB_PASSWORD || 'dbfflfkffl',
+	},
+};

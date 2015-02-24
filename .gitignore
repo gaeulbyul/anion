@@ -35,5 +35,7 @@ node_modules
 # config
 config.cson
 
+*.swp
+
 # ???
 ignore

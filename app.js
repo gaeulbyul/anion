@@ -1,9 +1,12 @@
 var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
-var config = require('./config');
+var q = require('q');
+
 var AniONDB = require('./model/aniondb');
 var Anissia = require('./lib/anissia');
+
+var config = require('./config');
 
 var app = express();
 
@@ -14,7 +17,7 @@ app.use(morgan('dev')); // logger
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-AniONDB.connect(config.mongodb_url, true);
+var aniondb = new AniONDB(config.database);
 
 route = express.Router();
 
@@ -25,27 +28,28 @@ route.get('/', function showIndex(req, res){
 });
 
 route.get('/api/anilist', function(req, res, next) {
-	var condi = {};
-	if (req.query.search) {
-		condi.search = req.query.search;
-	} else {
-		condi.weekday = (/\d+/.test(req.query.weekday))
-			? Number(req.query.weekday)
-			: new Date().getDay();
-	}
+	// if (req.query.search) var pattern = new RegExp('.*' +RegExp.escape(condi.search)+ '.*', 'i')
+	var weekday = (/\d+/.test(req.query.weekday))
+		? Number(req.query.weekday)
+		: new Date().getDay();
 	var page = 'page' in req.query ? Number(req.query.page) - 1 : 0;
-	AniONDB.Ani.searchAni(condi, page, function(err, anis, count) {
-		if (err) {
-			return res.status(500);
-		}
+	aniondb.Ani.findAndCountAll({
+		where: {
+			weekday: weekday
+		},
+		order: ['index', 'weekday'],
+		offset: 30 * req.query.page,
+		limit: 30,
+	}).then(function(anis) {
 		var result = {
-			result: anis,
-			count: count,
+			result: anis.rows,
+			count: anis.count,
 		};
 		return res.status(200).json(result);
 	});
 });
 
+/*
 route.get('/api/ani', function(req, res, next) {
 	var aniID = req.query.id;
 	if (!/^\d+$/.test(aniID)) {
@@ -69,6 +73,7 @@ route.get('/api/cap', function(req, res, next) {
 		}
 	});
 });
+*/
 
 app.use(route);
 
