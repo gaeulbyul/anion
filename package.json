@@ -1,24 +1,25 @@
 {
 	"name": "anion",
-		"version": "2.1.0-alpha1",
-		"private": true,
-		"scripts": {
-			"start": "node ./bin/www.js"
-		},
-		"dependencies": {
-			"body-parser": "~1.3",
-			"cookie-parser": "~1.3",
-			"express": "~4.11",
-			"grunt": "~0.4",
-			"grunt-contrib-concat": "~0.5",
-			"grunt-contrib-stylus": "~0.20",
-			"grunt-contrib-uglify": "~0.6",
-			"grunt-contrib-watch": "~0.6",
-			"morgan": "^1.1",
-			"pg": "^4.2.0",
-			"pg-hstore": "^2.3.1",
-			"q": "^1.2.0",
-			"request": "^2.47",
-			"sequelize": "^2.0.3"
-		}
+	"version": "2.1.0-alpha1",
+	"private": true,
+	"scripts": {
+		"start": "node ./bin/www.js"
+	},
+	"dependencies": {
+		"body-parser": "~1.3",
+		"cookie-parser": "~1.3",
+		"express": "~4.11",
+		"grunt": "~0.4",
+		"grunt-contrib-concat": "~0.5",
+		"grunt-contrib-stylus": "~0.20",
+		"grunt-contrib-uglify": "~0.6",
+		"grunt-contrib-watch": "~0.6",
+		"morgan": "^1.1",
+		"pg": "^4.2.0",
+		"pg-hstore": "^2.3.1",
+		"q": "^1.2.0",
+		"request": "^2.47",
+		"request-promise": "^0.4.0",
+		"sequelize": "^2.0.3"
+	}
 }

@@ -1,7 +1,7 @@
 var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
-var q = require('q');
+var Q = require('q');
 
 var AniONDB = require('./model/aniondb');
 var Anissia = require('./lib/anissia');

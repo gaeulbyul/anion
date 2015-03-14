@@ -13,7 +13,6 @@ function AniONDB (dbconfig) {
 		password: dbconfig.password,
 		host: dbconfig.host,
 	};
-	console.log(JSON.stringify(this.config,0,4));
 	this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, {
 		host: this.config.host,
 		dialect: 'postgres',
@@ -32,8 +31,7 @@ function AniONDB (dbconfig) {
 		},
 		index: {
 			type: Sequelize.INTEGER,
-			allowNull: false,
-			unique: true,
+			//allowNull: false,
 		},
 		weekday: {
 			type: Sequelize.INTEGER,
@@ -64,6 +62,8 @@ function AniONDB (dbconfig) {
 	}, {
 		freezeTableName: true,
 		tableName: 'ani',
+		createdAt: false,
+		updatedAt: false,
 	});
 
 	this.Genre = this.seq.define('Genre', {
@@ -73,6 +73,8 @@ function AniONDB (dbconfig) {
 	}, {
 		freezeTableName: true,
 		tableName: 'ani_genres',
+		createdAt: false,
+		updatedAt: false,
 	});
 };
 
