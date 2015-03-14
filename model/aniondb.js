@@ -16,6 +16,7 @@ function AniONDB (dbconfig) {
 	this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, {
 		host: this.config.host,
 		dialect: 'postgres',
+		omitNull: true, // http://stackoverflow.com/a/14333057
 	});
 	this.seq.authenticate()
 		.complete(function(err) {
@@ -68,9 +69,19 @@ function AniONDB (dbconfig) {
 	});
 
 	this.Genre = this.seq.define('Genre', {
-		id: Sequelize.INTEGER,
-		anime_id: Sequelize.INTEGER,
-		genre: Sequelize.STRING,
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
+		ani_id: {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+		},
+		genre: {
+			type: Sequelize.STRING,
+			allowNull: false,
+		},
 	}, {
 		freezeTableName: true,
 		tableName: 'ani_genres',

@@ -7,28 +7,28 @@ var Q = require('q');
 
 var aniondb = new AniONDB(config.database);
 
+function showError (prefix) {
+	return function (err) {
+		console.error('%s, %j', prefix, err);
+	}
+}
+
 function crawlOneWeekday (weekday) {
 	return Anissia.getAnilist(weekday)
 		.then(function (anilist) {
 			anilist.forEach(function (ani) {
-				var genre = ani.genre;
-				if (genre == '어드벤쳐' || genre == '모험') ani.genre = '어드벤처';
-				if (genre == '미스테리') ani.genre = '미스터리';
-				if (genre == '메카물') ani.genre = '메카닉';
-				if (genre == '학원물') ani.genre = '학원';
-				if (genre == '호러물') ani.genre = '호러';
-				if (genre == '연애') ani.genre = '로맨스';
+				var genres = ani.genres.slice(0); // copy array;
+				ani.genre = ani.genres.join();
+				delete ani.genres;
 				aniondb.Ani.upsert(ani)
-					.then(function (ani) {
-						var genres = ani.genres;
+					.then(function (/*ani*/) {
 						genres.forEach(function (genre) {
-							a
 							aniondb.Genre.create({
 								ani_id: ani.id,
 								genre: genre,
-							});
+							}).error(showError('genre'));
 						});
-					})
+					}).error(showError('ani'))
 				;;
 			});
 		})
@@ -67,8 +67,7 @@ function crawlOneWeekday (weekday) {
 */
 
 aniondb.seq
-.query('DELETE FROM ani')
-.query('DELETE FROM ani_genres')
+.query('DELETE FROM ani; DELETE FROM ani_genres')
 .then(function () {
 	var result = Q();
 	for (var weekday=0; weekday <= 8; weekday++) {

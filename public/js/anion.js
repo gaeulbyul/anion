@@ -42,7 +42,7 @@ var AniONUtils = {
 			id: ani.id,
 			weekday: ani.weekday,
 			title: ani.title,
-			genre: ani.genre,
+			genre: ani.genres,
 			time: ani.time,
 			ended: ani.ended,
 			state: '',

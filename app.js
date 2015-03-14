@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var aniondb = new AniONDB(config.database);
 
-route = express.Router();
+var route = express.Router();
 
 route.get('/', function showIndex(req, res){
 	res.status(200).sendFile('index.html', {
