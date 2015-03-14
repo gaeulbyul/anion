@@ -50,6 +50,7 @@ function AniONDB (dbconfig) {
 			defaultValue: false,
 		},
 		homepage: Sequelize.STRING,
+		genre: Sequelize.STRING,
 		broaded: Sequelize.BOOLEAN,
 		startdate: {
 			type: Sequelize.STRING(8),
