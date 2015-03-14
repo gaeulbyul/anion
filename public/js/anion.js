@@ -172,7 +172,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 					});
 				})
 				.error(function(r) {
-					// console.error(r);
+					//console.error(r);
 				})
 			;;
 		},
@@ -302,7 +302,7 @@ var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
 MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 	// $scope.anis = [];
 	$scope.init = function () {
-		AniListFactory.getRecentAniList();
+		//AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
 		if (AniListFactory.anis.length > 0) {
@@ -310,7 +310,8 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 				return AniONUtils.makeItem(ani, params);
 			});
 		} else {
-			AniListFactory.getTodayAniList();
+			// problem here..
+			//AniListFactory.getTodayAniList();
 		}
 		document.getElementById('main').className = 'main-ani-list';
 	});
@@ -320,7 +321,7 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 	// $scope.pages = [];
 	// $scope.current_page = null;
 	$scope.init = function () {
-		AniListFactory.getRecentAniList();
+		//AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
 		var count = params.count;

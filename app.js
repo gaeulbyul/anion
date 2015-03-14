@@ -32,15 +32,18 @@ route.get('/api/anilist', function(req, res, next) {
 	var weekday = (/\d+/.test(req.query.weekday))
 		? Number(req.query.weekday)
 		: new Date().getDay();
-	var page = 'page' in req.query ? Number(req.query.page) - 1 : 0;
+	var page = 'page' in req.query ? Number(req.query.page) : 1;
 	aniondb.Ani.findAndCountAll({
 		where: {
 			weekday: weekday
 		},
 		order: ['index', 'weekday'],
-		offset: 30 * req.query.page,
+		offset: 30 * (req.query.page - 1),
 		limit: 30,
 	}).then(function(anis) {
+		if (!anis.rows.length) {
+			return res.status(404).json({'error':'empty row'});
+		}
 		var result = {
 			result: anis.rows,
 			count: anis.count,
