@@ -12,7 +12,9 @@ function AniONDB (dbconfig) {
 		omitNull: true, // http://stackoverflow.com/a/14333057
 	};
 	if (dbconfig.url) {
-		this.config.dburl = dbconfig.url;
+		this.config = {
+			dburl: dbconfig.url,
+		}
 		this.seq = new Sequelize(this.config.dburl, seqoptions);
 	} else {
 		this.config = {
