@@ -1,5 +1,11 @@
 {
 	"name": "anion",
+	"author": {
+		"name": "Gaeulbyul",
+		"email": "aeiou256@hanmail.net",
+		"url": "http://anion.herokuapp.com"
+	},
+	"description": "Anime Timetable from Anissia",
 	"version": "2.1.0-alpha1",
 	"private": true,
 	"scripts": {
