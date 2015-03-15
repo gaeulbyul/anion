@@ -40,11 +40,12 @@
 								</div>
 							</form>
 						</div>
-						<!--
 						<div class="menu-main">
+							<a class="menu-item">장르별로 보기 <small>(구현 예정)</small></a>
+							<!--
 							<a class="menu-item">차기 방영예정</a>
+							-->
 						</div>
-						-->
 						<hr class="divider">
 						<div class="menu-anilist-more">
 							<div style="display:table-row">
@@ -52,7 +53,7 @@
 								<div class="divider"></div>
 								<a class="menu-item" ng-class="{highlight: currentWeekday === 8}" ng-click="showWeekday($event, 8)">신작</a>
 								<div class="divider"></div>
-								<a class="menu-item" ng-class="{highlight: currentWeekday === 9}" ng-click="showWeekday($event, 9)">종영</a>
+								<a class="menu-item" ng-class="{highlight: currentWeekday === 9}" ng-click="showWeekday($event, 9)">종영 <small>(구현 예정)</small></a>
 							</div>
 						</div>
 						<hr class="divider">
@@ -77,8 +78,12 @@
 			<ng-view></ng-view>
 		</main>
 		<footer>
-			<noscript class="warning">현재 자바스크립트가 꺼져있어서 기능이 동작하지 않을 수 있습니다.<br><a href="http://www.enable-javascript.com/ko/">자바스크립트를 켜주세요.</a></noscript>
-			<p>Ani-ON, Yet another animation time-table.<br>API: <a href="http://www.anissia.net/?m=3">Anissia</a></p>
+			<noscript class="warning">현재 자바스크립트가 꺼져있거나, 지원하지 않는 웹 브라우저라서 기능이 동작하지 않을 수 있습니다.<br><a href="http://www.enable-javascript.com/ko/">자바스크립트를 켜주세요.</a></noscript>
+			<p>
+				Ani-ON: Yet another anime time-table.<br>
+				Powered by: Node.js, PostgreSQL, Angular.js<br>
+				API: <a href="http://www.anissia.net/?m=3">Anissia</a>
+			</p>
 		</footer>
 		<script type="text/x-template" id="T-anilist">
 			<div id="ani-list" ng-controller="AniListCtrler" ng-init="init()">

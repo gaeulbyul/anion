@@ -42,7 +42,7 @@ var AniONUtils = {
 			id: ani.id,
 			weekday: ani.weekday,
 			title: ani.title,
-			genre: ani.genres,
+			genre: ani.genre,
 			time: ani.time,
 			ended: ani.ended,
 			state: '',
@@ -106,11 +106,7 @@ angular.module('AniONFilters', []).filter({
 		}
 	}},
 	genre: function() {return function (input) {
-		if (Array.isArray(input) && input.length > 0 && !!input[0]) {
-			return input.join(' / ');
-		} else {
-			return '장르 미정';
-		}
+		return input.replace(/,/g, ', ');
 	}},
 });
 

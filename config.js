@@ -3,6 +3,7 @@ var env = process.env;
 module.exports = {
 	port: env.ANION_PORT || 8081,
 	env: env.ANION_ENV || 'development',
+	useragent: env.ANION_USERAGENT || 'Ani-ON Crawler - TestVersion',
 	database: {
 		host: env.ANION_DB_HOST || 'localhost',
 		name: env.ANION_DB_NAME || 'anion',
