@@ -5,9 +5,10 @@ module.exports = {
 	env: env.ANION_ENV || 'development',
 	useragent: env.ANION_USERAGENT || 'Ani-ON Crawler - TestVersion',
 	database: {
-		host: env.ANION_DB_HOST || 'localhost',
-		name: env.ANION_DB_NAME || 'anion',
-		username: env.ANION_DB_USERNAME || 'zn1707',
-		password: env.ANION_DB_PASSWORD || 'dbfflfkffl',
+		url : env.DATABASE_URL,
+		host: env.ANION_DB_HOST,
+		name: env.ANION_DB_NAME,
+		username: env.ANION_DB_USERNAME,
+		password: env.ANION_DB_PASSWORD,
 	},
 };

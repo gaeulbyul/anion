@@ -7,17 +7,23 @@ RegExp.escape = function RegExp__escape (t) {
 }
 
 function AniONDB (dbconfig) {
-	this.config = {
-		name: dbconfig.name,
-		username: dbconfig.username,
-		password: dbconfig.password,
-		host: dbconfig.host,
-	};
-	this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, {
-		host: this.config.host,
+	var seqoptions = {
 		dialect: 'postgres',
 		omitNull: true, // http://stackoverflow.com/a/14333057
-	});
+	};
+	if (dbconfig.url) {
+		this.config.dburl = dbconfig.url;
+		this.seq = new Sequelize(this.config.dburl, seqoptions);
+	} else {
+		this.config = {
+			name: dbconfig.name,
+			username: dbconfig.username,
+			password: dbconfig.password,
+			host: dbconfig.host,
+		};
+		seqoptions.host = dbconfig.host;
+		this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, seqoptions);
+	}
 	this.seq.authenticate()
 		.complete(function(err) {
 			if (err) {
