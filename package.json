@@ -14,7 +14,7 @@
 		"grunt-contrib-concat": "~0.5",
 		"grunt-contrib-stylus": "~0.20",
 		"grunt-contrib-uglify": "~0.6",
-		"grunt-contrib-watch": "~0.6",
+		"grunt-contrib-watch": "~0.6"
 	},
 	"dependencies": {
 		"body-parser": "~1.3",
