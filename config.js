@@ -10,5 +10,6 @@ module.exports = {
 		name: env.ANION_DB_NAME,
 		username: env.ANION_DB_USERNAME,
 		password: env.ANION_DB_PASSWORD,
+		ssl: true,
 	},
 };
