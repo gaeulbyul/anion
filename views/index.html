@@ -157,7 +157,12 @@
 							<div class="name">{{cap.name}}</div>
 							<div class="updateat">{{cap.updateat | datetime14}}</div>
 						</a>
-						<div ng-if="caps.length == 0">
+						<div ng-if="caps_loading">
+							<div class="caps-loading">
+								로딩중……
+							</div>
+						</div>
+						<div ng-if="!caps_loading && caps.length == 0">
 							<div class="notfound">
 								자막제작자를 찾을 수 없습니다.
 							</div>

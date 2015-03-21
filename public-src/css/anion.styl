@@ -351,7 +351,7 @@ main.main-ani-detail
 
 	.content
 		margin 5px 20px
-		.notfound
+		.notfound, .caps-loading
 			padding 10px
 			text-align center
 			font-size 10pt
@@ -383,8 +383,10 @@ main.main-ani-detail
 				&:first-of-type
 					border-top 0
 				&.no-url
+					cursor not-allowed
 					.episode, .name
-						color $text-color2
+						text-decoration line-through
+						color lighten($text-color2, 5%)
 		.links
 			.link
 				display block

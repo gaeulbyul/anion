@@ -352,6 +352,7 @@ MainCtrlers.controller('AniDetailCtrler',
 {
 	$scope.ani = {};
 	$scope.caps = [];
+	$scope.caps_loading = true;
 	$scope.checklink = function (event, url) {
 		if (!url) {
 			event.preventDefault();
@@ -373,6 +374,7 @@ MainCtrlers.controller('AniDetailCtrler',
 		document.getElementById('main').className = 'main-ani-detail';
 	});
 	$scope.$on('gotAniCaptions', function (event) {
+		$scope.caps_loading = false;
 		// $scope.caps = AniCaptionFactory.caps;
 		$scope.caps = AniCaptionFactory.caps.map(function (c) {
 			c.json = JSON.stringify(c,null,2);
