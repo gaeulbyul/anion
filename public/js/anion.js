@@ -255,6 +255,7 @@ AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
 
 AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniListFactory) {
 	//http://stackoverflow.com/q/12618342
+	$scope.loading = true;
 	$scope.formdata = {};
 	$scope.menuVisible = false;
 	$scope.toggleMenu = function ($event) {
@@ -265,6 +266,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	$scope.currentPage = null;
 	$scope.currentQuery = null;
 	$scope.$on('gotAniList', function (event, params) {
+		$scope.loading = false;
 		$scope.currentPage = params.page;
 		$scope.currentMode = params.amode;
 		if (params.amode == 'w') {
@@ -277,20 +279,23 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		$scope.menuVisible = false;
 		$scope.leftIsBack = false;
 	});
-	$scope.goBack = function ($event) {
-		$window.history.back();
-	};
 	$scope.showWeekday = function ($event, weekday) {
 		// var target = $event.currentTarget;
+		$scope.loading = true;
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
 	};
 	$scope.searchAniList = function ($event) {
 		// var target = $event.currentTarget;
+		$scope.loading = true;
 		$location.path('/');
 		AniListFactory.searchAniList($scope.formdata.query);
 		window.scrollTo(0, 0);
 	};
+});
+
+AniON.controller('MainViewCtrler', function ($scope) {
+	//
 });
 
 var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
@@ -301,6 +306,7 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 		//AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
+		$scope.loading = false;
 		if (AniListFactory.anis.length > 0) {
 			$scope.anis = AniListFactory.anis.map(function (ani) {
 				return AniONUtils.makeItem(ani, params);

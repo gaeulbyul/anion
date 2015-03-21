@@ -6,8 +6,6 @@ $text-color1 = #222
 $text-color2 = #666
 $text-color3 = #f6f6f6
 // http://flatuicolors.com/
-$green1 = #2ecc71
-$green2 = #27ae60
 $blue1 = #3498db
 $blue2 = #2980b9
 $black1 = #34495e
@@ -38,13 +36,11 @@ body, body *
 		font-family 'Nanum Gothic', '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
 
 a
+	color $blue1
 	text-decoration none
 	cursor pointer
 	img
 		border 0
-
-a, a:visited
-	color $green1
 
 hr
 	border 0
@@ -63,9 +59,10 @@ hr
 	visibility hidden
 
 ::selection
-	background-color #ffa
+	background-color #cdf
+
 ::-moz-selection
-	background-color #ffa
+	background-color #cdf
 
 .titlebar, .menuwrapper, main, footer
 	margin 0 auto
@@ -132,6 +129,19 @@ footer
 		background-color #ffc
 		color #663
 
+#loading
+	position fixed
+	top 0
+	bottom 0
+	left 0
+	right 0
+	margin auto
+	height 100px
+	width 100px
+	img
+		width 100px
+		height 100px
+
 .menuwrapper
 	// padding-top 5px
 	background-color $black2
@@ -143,14 +153,14 @@ footer
 		.divider
 			width 90%
 			color $black1
+		.menu-item:hover
+			background-color lighten($black1, 5%)
 		.menu-main
 			.menu-item
 				display block
 				padding 5px 20px
 				font-size 12pt
 				color $text-color3
-				&:hover
-					background-color lighten($black1, 5%)
 				&:after
 					content '>'
 					float right
@@ -165,8 +175,6 @@ footer
 				text-align center
 				color $text-color3
 				white-space nowrap
-				&:hover
-					background-color lighten($black1, 5%)
 				&.highlight
 					border-bottom 3px solid lighten($black1, 30%)
 					font-weight bold
@@ -221,7 +229,7 @@ footer
 		padding 7px 5px
 		color $text-color3
 		&.highlight
-			border-bottom 3px solid $green2
+			border-bottom 3px solid $blue1
 			font-weight bold
 		&:not(.highlight)
 			border-bottom 3px solid $black2

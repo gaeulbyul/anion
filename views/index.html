@@ -13,9 +13,12 @@
 		<div id="titlebar" class="titlewrap" ng-controller="TitlebarCtrler">
 			<div class="titleinwrap">
 				<div class="titlebar">
+				    <a id="left-button" class="button"></a>
+				    <!--
 					<a id="left-button" class="button" ng-click="goBack($event)">
 						<img alt="메뉴" height="20" src="img/left.svg">
 					</a>
+					-->
 					<div class="title">
 						<a href=".">Ani-ON</a>
 					</div>
@@ -73,8 +76,11 @@
 					</nav>
 				</div>
 			</div>
+			<div id="loading" ng-if="loading">
+				<img src="img/puff.svg">
+			</div>
 		</div>
-		<main id="main">
+		<main id="main" ng-controller="MainViewCtrler">
 			<ng-view></ng-view>
 		</main>
 		<footer>
