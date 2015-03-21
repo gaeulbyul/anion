@@ -4,78 +4,77 @@ var Anissia = require('../lib/anissia');
 var AniONDB = require('../model/aniondb');
 var config = require('../config');
 var Q = require('q');
+var _ = require('underscore');
 
 var aniondb = new AniONDB(config.database);
 
 function showError (prefix) {
 	return function (err) {
 		console.error('%s, %j', prefix, err);
-	}
+	};
+}
+
+var toRemove = [];
+
+function callback (db) {
+	return function (newlist, dblist) {
+		var dblist_ids = _.pluck(dblist, 'id');
+		newlist.forEach(function (ani) {
+			dblist_ids = _.without(dblist_ids, ani.id);
+			db.Ani.upsert(ani);
+		});
+		dblist_ids.forEach(function (id) {
+			toRemove.push(id)
+		});
+	};
 }
 
 function crawlOneWeekday (weekday) {
-	return Anissia.getAnilist(weekday)
-		.then(function (anilist) {
-			anilist.forEach(function (ani) {
-				var genres = ani.genres.slice(0); // copy array;
-				ani.genre = ani.genres.join();
-				delete ani.genres;
-				aniondb.Ani.upsert(ani)
-					.then(function (/*ani*/) {
-						genres.forEach(function (genre) {
-							aniondb.Genre.create({
-								ani_id: ani.id,
-								genre: genre,
-							}).error(showError('genre'));
-						});
-					}).error(showError('ani'))
-				;;
-			});
-		})
-	;;
-}
-
-/*
-CREATE TABLE "ani_genres" (
-	id INTEGER NOT NULL UNIQUE,
-	ani_id INTEGER NOT NULL,
-	genre TEXT NOT NULL,
-	PRIMARY KEY(id)
-);
- */
-
-/* maybe later...
-function crawlOneWeekday (weekday) {
-	var p = Q.spread(
+	return Q.spread(
 		Anissia.getAnilist(weekday),
 		aniondb.Ani.findAll({
 			ended: false,
 			weekday: weekday,
-		}), function (new_anilist, anilist) {
-			anilist_ids = anilist.map(function (ani) {
-				return ani.id;
-			});
-			new_anilist.forEach(function (ani) {
-				if (anilist_ids.indexOf(ani.id) > 0) {
-					aniondb.Ani.upsert(ani);
-				}
-			});
-		});
-	;;
-	return p;
+		}), callback(aniondb)
+	);
 }
-*/
 
-aniondb.seq
-.query('DELETE FROM ani; DELETE FROM ani_genres')
+function crawlEndedOnePage (page) {
+	return Q.spread(
+		Anissia.getEndedAnilist(page),
+		aniondb.Ani.findAll({
+			ended: true
+		}), callback(aniondb)
+	);
+}
+
+//aniondb.seq
+//.query('DELETE FROM ani; DELETE FROM ani_genres')
+Q()
 .then(function () {
 	var result = Q();
 	for (var weekday=0; weekday <= 8; weekday++) {
-		result = result.then(crawlOneWeekday.bind(null,weekday));
+		result = result.then(crawlOneWeekday.bind(null, weekday));
 	}
+})
+.then(function () {
+	var result = Q();
+	for (var page=0; page <= 10; page++) {
+		result = result.then(crawlEndedOnePage.bind(null, page));
+	}
+})
+.then(function () {
+	toRemove.forEach(function (id) {
+		console.info('should remove id %d', id);
+		/*
+		db.Ani.destroy({
+			where: {id: toremove}
+		});
+		*/
+	});
 });
 /*
 n -> insert(upsert)
-n a -> update(upsert)
-  a -> remove
+n d -> update(upsert)
+  d -> remove
 */
