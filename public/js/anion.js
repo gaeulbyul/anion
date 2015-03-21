@@ -106,7 +106,11 @@ angular.module('AniONFilters', []).filter({
 		}
 	}},
 	genre: function() {return function (input) {
-		return input.replace(/,/g, ', ');
+		if (input) {
+			return input.replace(/,/g, ', ');
+		} else {
+			return '장르 불명';
+		}
 	}},
 });
 
@@ -312,7 +316,6 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 				return AniONUtils.makeItem(ani, params);
 			});
 		} else {
-			// problem here..
 			//AniListFactory.getTodayAniList();
 		}
 		document.getElementById('main').className = 'main-ani-list';
@@ -343,7 +346,6 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 MainCtrlers.controller('AniDetailCtrler',
 	function ($scope, $routeParams, $window, AniDetailFactory, AniCaptionFactory)
 {
-	$scope.nourl = 'javascript:'
 	$scope.ani = {};
 	$scope.caps = [];
 	$scope.checklink = function (event, url) {

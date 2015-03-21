@@ -52,31 +52,28 @@ route.get('/api/anilist', function(req, res, next) {
 	});
 });
 
-/*
 route.get('/api/ani', function(req, res, next) {
 	var aniID = req.query.id;
 	if (!/^\d+$/.test(aniID)) {
 		return res.status(400).send('invalid!');
 	}
-	AniONDB.Ani.getAni(aniID, function (err, dat) {
-		if (err) {
-			return res.status(500);
-		}
-		return res.status(!!dat ? 200 : 404).json(dat);
-	})
+	aniondb.Ani.find({
+		where: { id: aniID }
+	}).then(function (ani) {
+		return res.status(200).json(ani);
+	}, function (err) {
+		return res.status(500);
+	});
 });
 
 route.get('/api/cap', function(req, res, next) {
 	var aniID = req.query.id;
-	Anissia.getAni(aniID, function (err, body) {
-		if (err) {
-			return res.status(500).send(err);
-		} else {
-			return res.status(200).json(body);
-		}
-	});
+	Anissia.getAni(aniID)
+		.then(function (ani) {
+			return res.status(200).json(ani);
+		})
+	;;
 });
-*/
 
 app.use(route);
 
