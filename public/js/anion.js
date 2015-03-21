@@ -283,6 +283,10 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		$scope.menuVisible = false;
 		$scope.leftIsBack = false;
 	});
+
+	$scope.$on('gotAniDetail', function (event) {
+		$scope.loading = false;
+	});
 	$scope.showWeekday = function ($event, weekday) {
 		// var target = $event.currentTarget;
 		$scope.loading = true;
@@ -307,7 +311,7 @@ var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
 MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 	// $scope.anis = [];
 	$scope.init = function () {
-		//AniListFactory.getRecentAniList();
+		AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
 		$scope.loading = false;
