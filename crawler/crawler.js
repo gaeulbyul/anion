@@ -8,12 +8,6 @@ var _ = require('underscore');
 
 var aniondb = new AniONDB(config.database);
 
-function showError (prefix) {
-	return function (err) {
-		console.error('%s, %j', prefix, err);
-	};
-}
-
 var toRemove = [];
 
 function callback (db) {
@@ -29,10 +23,7 @@ function callback (db) {
 	};
 }
 
-//aniondb.seq
-//.query('DELETE FROM ani; DELETE FROM ani_genres')
-Q()
-.then(function () {
+Q.all([function () {
 	function crawlOneWeekday (weekday) {
 		return Q.all([
 			Anissia.getAnilist(weekday),
@@ -47,8 +38,7 @@ Q()
 		result = result.then(crawlOneWeekday.bind(null, weekday));
 	}
 	return result;
-})
-.then(function () {
+}, function () {
 	function crawlEndedOnePage (page) {
 		return Q.all([
 			Anissia.getEndedAnilist(page),
@@ -62,19 +52,11 @@ Q()
 		result = result.then(crawlEndedOnePage.bind(null, page));
 	}
 	return result;
-})
-.then(function () {
+}
+]).done(function () {
 	toRemove.forEach(function (id) {
-		console.info('should remove id %d', id);
-		/*
-		db.Ani.destroy({
-			where: {id: toremove}
+		aniondb.Ani.destroy({
+			where: {id: id}
 		});
-		*/
 	});
 });
-/*
-n -> insert(upsert)
-n d -> update(upsert)
-  d -> remove
-*/
