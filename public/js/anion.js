@@ -171,9 +171,6 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 						page: page
 					});
 				})
-				.error(function(r) {
-					//console.error(r);
-				})
 			;;
 		},
 		getTodayAniList: function () {
@@ -207,7 +204,6 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 		},
 		broadcastAniList: function (params) {
 			// http://stackoverflow.com/a/11847277
-			// console.log('recent? %s', this.recent.recent); XXX
 			this.recent = params;
 			$rootScope.$broadcast('gotAniList', params);
 			this.recent.recent = true;
@@ -309,7 +305,6 @@ AniON.controller('MainViewCtrler', function ($scope) {
 var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
 
 MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
-	// $scope.anis = [];
 	$scope.init = function () {
 		AniListFactory.getRecentAniList();
 	}
@@ -319,18 +314,14 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 			$scope.anis = AniListFactory.anis.map(function (ani) {
 				return AniONUtils.makeItem(ani, params);
 			});
-		} else {
-			//AniListFactory.getTodayAniList();
 		}
 		document.getElementById('main').className = 'main-ani-list';
 	});
 });
 
 MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
-	// $scope.pages = [];
-	// $scope.current_page = null;
 	$scope.init = function () {
-		//AniListFactory.getRecentAniList();
+		AniListFactory.getRecentAniList();
 	}
 	$scope.$on('gotAniList', function (event, params) {
 		var count = params.count;
@@ -375,10 +366,6 @@ MainCtrlers.controller('AniDetailCtrler',
 	});
 	$scope.$on('gotAniCaptions', function (event) {
 		$scope.caps_loading = false;
-		// $scope.caps = AniCaptionFactory.caps;
-		$scope.caps = AniCaptionFactory.caps.map(function (c) {
-			c.json = JSON.stringify(c,null,2);
-			return c;
-		});
+		$scope.caps = AniCaptionFactory.caps;
 	})
 });
