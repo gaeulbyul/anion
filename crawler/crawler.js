@@ -14,8 +14,18 @@ function callback (db) {
 	return function (newlist, dblist) {
 		var dblist_ids = _.pluck(dblist, 'id');
 		newlist.forEach(function (ani) {
+			var genres = ani.genres.slice(0); // copy array;
+			ani.genre = ani.genres.join();
+			delete ani.genres;
 			dblist_ids = _.without(dblist_ids, ani.id);
-			db.Ani.upsert(ani);
+			db.Ani.upsert(ani).then(function () {
+				genres.forEach(function (genre) {
+					aniondb.Genre.create({
+						ani_id: ani.id,
+						genre: genre
+					});
+				});
+			});
 		});
 		dblist_ids.forEach(function (id) {
 			toRemove.push(id)
@@ -23,7 +33,8 @@ function callback (db) {
 	};
 }
 
-Q.all([function () {
+Q()
+.then(function () {
 	function crawlOneWeekday (weekday) {
 		return Q.all([
 			Anissia.getAnilist(weekday),
@@ -38,7 +49,8 @@ Q.all([function () {
 		result = result.then(crawlOneWeekday.bind(null, weekday));
 	}
 	return result;
-}, function () {
+})
+.then(function () {
 	function crawlEndedOnePage (page) {
 		return Q.all([
 			Anissia.getEndedAnilist(page),
@@ -52,8 +64,8 @@ Q.all([function () {
 		result = result.then(crawlEndedOnePage.bind(null, page));
 	}
 	return result;
-}
-]).done(function () {
+})
+.then(function () {
 	toRemove.forEach(function (id) {
 		aniondb.Ani.destroy({
 			where: {id: id}
