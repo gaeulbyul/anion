@@ -1,5 +1,4 @@
 var Sequelize = require('sequelize');
-var format = require('util').format;
 
 RegExp.escape = function RegExp__escape (t) {
 	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
@@ -39,7 +38,7 @@ function AniONDB (dbconfig) {
 		},
 		weekday: {
 			type: Sequelize.INTEGER,
-			allowNull: false,
+			allowNull: true, // for ended ani
 		},
 		title: {
 			type: Sequelize.STRING,
@@ -82,7 +81,7 @@ function AniONDB (dbconfig) {
 			allowNull: false,
 		},
 		genre: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(30),
 			allowNull: false,
 		},
 	}, {

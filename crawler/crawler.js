@@ -29,39 +29,39 @@ function callback (db) {
 	};
 }
 
-function crawlOneWeekday (weekday) {
-	return Q.spread(
-		Anissia.getAnilist(weekday),
-		aniondb.Ani.findAll({
-			ended: false,
-			weekday: weekday,
-		}), callback(aniondb)
-	);
-}
-
-function crawlEndedOnePage (page) {
-	return Q.spread(
-		Anissia.getEndedAnilist(page),
-		aniondb.Ani.findAll({
-			ended: true
-		}), callback(aniondb)
-	);
-}
-
 //aniondb.seq
 //.query('DELETE FROM ani; DELETE FROM ani_genres')
 Q()
 .then(function () {
+	function crawlOneWeekday (weekday) {
+		return Q.all([
+			Anissia.getAnilist(weekday),
+			aniondb.Ani.findAll({
+				ended: false,
+				weekday: weekday,
+			})
+		]).spread(callback(aniondb));
+	}
 	var result = Q();
 	for (var weekday=0; weekday <= 8; weekday++) {
 		result = result.then(crawlOneWeekday.bind(null, weekday));
 	}
+	return result;
 })
 .then(function () {
+	function crawlEndedOnePage (page) {
+		return Q.all([
+			Anissia.getEndedAnilist(page),
+			aniondb.Ani.findAll({
+				ended: true
+			})
+		]).spread(callback(aniondb));
+	}
 	var result = Q();
 	for (var page=0; page <= 10; page++) {
 		result = result.then(crawlEndedOnePage.bind(null, page));
 	}
+	return result;
 })
 .then(function () {
 	toRemove.forEach(function (id) {
