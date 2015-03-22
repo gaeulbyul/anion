@@ -33,14 +33,22 @@ route.get('/api/anilist', function(req, res, next) {
 		? Number(req.query.weekday)
 		: new Date().getDay();
 	var page = 'page' in req.query ? Number(req.query.page) : 1;
-	aniondb.Ani.findAndCountAll({
-		where: {
-			weekday: weekday
-		},
-		order: ['index', 'weekday'],
+	var dbquery = {
 		offset: 30 * (req.query.page - 1),
 		limit: 30,
-	}).then(function(anis) {
+	};
+	if (weekday < 9) {
+		dbquery.where = {
+			weekday: weekday
+		};
+		dbquery.order = ['index', 'weekday'];
+	} else {
+		dbquery.where = {
+			ended: true
+		};
+		dbquery.order = ['index'];
+	}
+	aniondb.Ani.findAndCountAll(dbquery).then(function(anis) {
 		if (!anis.rows.length) {
 			return res.status(404).json({'error':'empty row'});
 		}

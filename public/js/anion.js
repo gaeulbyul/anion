@@ -19,9 +19,9 @@ var AniONUtils = {
 		}
 		if (moment.isMoment(date8m) && date8m.isValid()) {
 			return date8m.format({
-				'YYYYMMDD': 'YYYY년 MM월 DD일',
-				'YYYYMM': 'YYYY년 MM월',
-				'YYYY': 'YYYY년',
+				'YYYYMMDD': 'YYYY/MM/DD',
+				'YYYYMM': 'YYYY/MM',
+				'YYYY': 'YYYY/??',
 			}[date8m._f]);
 		} else {
 			return '???';
@@ -206,7 +206,6 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			// http://stackoverflow.com/a/11847277
 			this.recent = params;
 			$rootScope.$broadcast('gotAniList', params);
-			this.recent.recent = true;
 		},
 	};
 });
