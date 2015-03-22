@@ -150,15 +150,16 @@ footer
 		color #ccc
 	#menu
 		overflow hidden
-		.divider
+		hr.divider
 			width 90%
-			color $black1
+			margin 3px auto
+			color lighten($black1, 10%)
 		.menu-item:hover
 			background-color lighten($black1, 5%)
 		.menu-main
 			.menu-item
 				display block
-				padding 5px 20px
+				padding 7px 20px
 				font-size 12pt
 				color $text-color3
 				&:after
@@ -176,12 +177,8 @@ footer
 				color $text-color3
 				white-space nowrap
 				&.highlight
-					border-bottom 3px solid lighten($black1, 30%)
+					border-bottom 3px solid $blue1
 					font-weight bold
-			.divider
-				width 1px
-				height 12px
-				background-color lighten($black1, 5%)
 		#today
 			text-align center
 			.date
@@ -189,7 +186,7 @@ footer
 				color $text-color3
 		.search-outer
 			padding 3px 0
-			background-color $black1
+			background-image linear-gradient(to bottom, $black1 0%, $black2 100%)
 		#search
 		text-align center
 			#searchform
@@ -198,16 +195,17 @@ footer
 				overflow hidden
 				margin 10px auto
 				display table
-				border 2px solid lighten($black1, 20%)
+				border 2px solid lighten($black1, 10%)
 				border-radius 3px
 				.innerwrap
 					display table-row
+					background-color $black2
 					input
 						padding 5px
 						color $text-color3
 						user-select text
 						border 0
-						background-color $black1
+						background-color transparent //$black2
 					.query, .submit
 						display table-cell
 					.query
@@ -238,11 +236,9 @@ footer
 		&:not(.highlight)
 			border-bottom 3px solid $black2
 		&:hover
-			background-color lighten($black1, 5%)
-	.divider
-		width 1px
-		height 12px
-		background-color lighten($black1, 10%)
+			background-color $black1
+			&:not(.highlight)
+				border-bottom 3px solid $black1
 
 #ani-list
 	width 100%
@@ -250,7 +246,7 @@ footer
 		display block
 		padding 10px 20px
 		background-color #fff
-		border-top 1px solid #ddd
+		border-top 1px solid #eee
 		&:first-of-type
 			border-top 0
 		&:hover
@@ -308,6 +304,7 @@ main.main-ani-detail
 			margin 0 20px 10px
 			.text
 				font-size 16pt
+				font-weight bold
 				color $text-color1
 			.state
 				margin 5px
