@@ -187,6 +187,9 @@ footer
 			.date
 				font-size 10pt
 				color $text-color3
+		.search-outer
+			padding 3px 0
+			background-color $black1
 		#search
 		text-align center
 			#searchform
@@ -195,7 +198,8 @@ footer
 				overflow hidden
 				margin 10px auto
 				display table
-				border 1px solid lighten($black1, 5%)
+				border 2px solid lighten($black1, 20%)
+				border-radius 3px
 				.innerwrap
 					display table-row
 					input
@@ -203,7 +207,7 @@ footer
 						color $text-color3
 						user-select text
 						border 0
-						background-color $black2
+						background-color $black1
 					.query, .submit
 						display table-cell
 					.query
@@ -217,7 +221,7 @@ footer
 						input
 							width 100%
 							font-size 10pt
-							border-left 1px solid lighten($black1, 5%)
+							// border-left 1px solid lighten($black1, 20%)
 
 .weekdaybar
 	display table
@@ -238,7 +242,7 @@ footer
 	.divider
 		width 1px
 		height 12px
-		background-color lighten($black1, 5%)
+		background-color lighten($black1, 10%)
 
 #ani-list
 	width 100%

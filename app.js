@@ -55,7 +55,6 @@ route.get('/api/anilist', function(req, res, next) {
 		}
 	}
 	aniondb.Ani.findAndCountAll(dbquery).then(function(anis) {
-		console.dir(anis);
 		var result = {
 			result: anis.rows,
 			count: anis.count,

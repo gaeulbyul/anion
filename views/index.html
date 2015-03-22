@@ -31,17 +31,19 @@
 						<!--
 						<div id="today"><span class="date"></span></div>
 						-->
-						<div id="search">
-							<form id="searchform" ng-submit="searchAniList($event)">
-								<div class="innerwrap">
-									<div class="query">
-										<input name="q" placeholder="검색" ng-model="formdata.query">
+						<div class="search-outer">
+							<div id="search">
+								<form id="searchform" ng-submit="searchAniList($event)">
+									<div class="innerwrap">
+										<div class="query">
+											<input name="q" placeholder="검색" ng-model="formdata.query">
+										</div>
+										<div class="submit">
+											<input type="submit" value="검색">
+										</div>
 									</div>
-									<div class="submit">
-										<input type="submit" value="검색">
-									</div>
-								</div>
-							</form>
+								</form>
+							</div>
 						</div>
 						<div class="menu-main">
 							<a class="menu-item">장르별로 보기 <small>(구현 예정)</small></a>
