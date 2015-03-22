@@ -1,10 +1,5 @@
 var Sequelize = require('sequelize');
 
-RegExp.escape = function RegExp__escape (t) {
-	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-	return t.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-
 function AniONDB (dbconfig) {
 	this.config = dbconfig;
 	var seqoptions = {
@@ -91,5 +86,7 @@ function AniONDB (dbconfig) {
 		updatedAt: false,
 	});
 };
+
+AniONDB.Sequelize = Sequelize;
 
 module.exports = AniONDB;

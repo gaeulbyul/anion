@@ -49,6 +49,7 @@ var AniONUtils = {
 			startdate: ani.startdate,
 			enddate: ani.enddate,
 			amode: params.amode,
+			query: params.query,
 		};
 		var startdate = AniONUtils.parseDate(ani.startdate);
 		var enddate = AniONUtils.parseDate(ani.enddate);
@@ -84,15 +85,21 @@ var AniONUtils = {
 		*/
 		return item;
 	},
-}
+	escapeRegexp: function escapeRegexp (t) {
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+		return t.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	}
+};
 
 
 angular.module('AniONFilters', []).filter({
 	weekday1: function () {return function (input) {
-		return '일월화수목금토외신종'[input];
+		if (input === null) return '종';
+		return '일월화수목금토외신'[input];
 	}},
 	weekday: function() {return function (input) {
-		return '일요일 월요일 화요일 수요일 목요일 금요일 토요일 기타 신작 종영'.split(' ')[input];
+		if (input === null) return '종영';
+		return '일요일 월요일 화요일 수요일 목요일 금요일 토요일 기타 신작'.split(' ')[input];
 	}},
 	time4: function() {return AniONUtils.formatTime},
 	date8: function() {return AniONUtils.formatDate},
@@ -111,6 +118,11 @@ angular.module('AniONFilters', []).filter({
 		} else {
 			return '장르 불명';
 		}
+	}},
+	highlight: function($sce) {return function (input, word) {
+		if (!word) return $sce.trustAsHtml(input);
+		var patt = new RegExp('('+AniONUtils.escapeRegexp(word)+')', 'gi');
+		return $sce.trustAsHtml(input.replace(patt, '<span class="match">$1</span>'));
 	}},
 });
 
@@ -196,10 +208,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 						count: r.count,
 						page: page
 					});
-				})
-				.error(function(r) {
-					console.error(r);
-				})
+				});
 			;;
 		},
 		broadcastAniList: function (params) {
@@ -306,13 +315,15 @@ var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
 MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 	$scope.init = function () {
 		AniListFactory.getRecentAniList();
-	}
+	};
 	$scope.$on('gotAniList', function (event, params) {
 		$scope.loading = false;
 		if (AniListFactory.anis.length > 0) {
 			$scope.anis = AniListFactory.anis.map(function (ani) {
 				return AniONUtils.makeItem(ani, params);
 			});
+		} else {
+			$scope.anis = [];
 		}
 		document.getElementById('main').className = 'main-ani-list';
 	});
@@ -321,7 +332,7 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 	$scope.init = function () {
 		AniListFactory.getRecentAniList();
-	}
+	};
 	$scope.$on('gotAniList', function (event, params) {
 		var count = params.count;
 		$scope.current_page = params.page;
@@ -334,7 +345,7 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 	$scope.showPage = function ($event, page) {
 		AniListFactory[($scope.current_listmode == 'w' ? 'get' : 'search')+'AniList'](-1, page);
 		window.scrollTo(0, 0);
-	}
+	};
 });
 
 MainCtrlers.controller('AniDetailCtrler',
@@ -348,7 +359,7 @@ MainCtrlers.controller('AniDetailCtrler',
 			event.preventDefault();
 			alert('주소가 등록되어있지 않습니다.');
 		}
-	}
+	};
 	$scope.$on('$routeChangeSuccess', function (event) {
 		var id = $routeParams.id;
 		AniDetailFactory.getAniDetail(id)
@@ -366,5 +377,5 @@ MainCtrlers.controller('AniDetailCtrler',
 	$scope.$on('gotAniCaptions', function (event) {
 		$scope.caps_loading = false;
 		$scope.caps = AniCaptionFactory.caps;
-	})
+	});
 });

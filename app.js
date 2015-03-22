@@ -28,36 +28,41 @@ route.get('/', function showIndex(req, res){
 });
 
 route.get('/api/anilist', function(req, res, next) {
-	// if (req.query.search) var pattern = new RegExp('.*' +RegExp.escape(condi.search)+ '.*', 'i')
 	var weekday = (/\d+/.test(req.query.weekday))
 		? Number(req.query.weekday)
 		: new Date().getDay();
 	var page = 'page' in req.query ? Number(req.query.page) : 1;
 	var dbquery = {
-		offset: 30 * (req.query.page - 1),
+		offset: 30 * (page - 1),
 		limit: 30,
 	};
-	if (weekday < 9) {
-		dbquery.where = {
-			weekday: weekday
-		};
-		dbquery.order = ['index', 'weekday'];
+	if (req.query.search) {
+		dbquery.where = [
+			'LOWER(title) LIKE LOWER(?)', '%'+req.query.search+'%'
+		];
+		dbquery.order = ['weekday', 'index'];
 	} else {
-		dbquery.where = {
-			ended: true
-		};
-		dbquery.order = ['index'];
+		if (weekday < 9) {
+			dbquery.where = {
+				weekday: weekday
+			};
+			dbquery.order = ['index', 'weekday'];
+		} else {
+			dbquery.where = {
+				ended: true
+			};
+			dbquery.order = ['index'];
+		}
 	}
 	aniondb.Ani.findAndCountAll(dbquery).then(function(anis) {
-		if (!anis.rows.length) {
-			return res.status(404).json({'error':'empty row'});
-		}
+		console.dir(anis);
 		var result = {
 			result: anis.rows,
 			count: anis.count,
 		};
 		return res.status(200).json(result);
 	});
+
 });
 
 route.get('/api/ani', function(req, res, next) {

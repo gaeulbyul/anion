@@ -94,9 +94,7 @@
 		<script type="text/x-template" id="T-anilist">
 			<div id="ani-list" ng-controller="AniListCtrler" ng-init="init()">
 				<a href="#/ani/{{ani.id}}" class="item" ng-repeat="ani in anis" title="{{ani.json}}">
-					<div class="title">
-						{{ani.title}}
-					</div>
+					<div class="title" ng-bind-html="ani.title | highlight:ani.query"></div>
 					<div class="info">
 						<span class="weekday" ng-if="ani.amode == 's'">{{ani.weekday | weekday}}</span>
 						<span class="time" ng-if="ani.weekday < 7">{{ani.time | time4}}</span>
