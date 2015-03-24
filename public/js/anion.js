@@ -45,6 +45,7 @@ var AniONUtils = {
 			genre: ani.genre,
 			time: ani.time,
 			ended: ani.ended,
+			homepage: ani.homepage,
 			state: '',
 			startdate: ani.startdate,
 			enddate: ani.enddate,
@@ -123,6 +124,11 @@ angular.module('AniONFilters', []).filter({
 		if (!word) return $sce.trustAsHtml(input);
 		var patt = new RegExp('('+AniONUtils.escapeRegexp(word)+')', 'gi');
 		return $sce.trustAsHtml(input.replace(patt, '<span class="match">$1</span>'));
+	}},
+	urlhost: function() {return function (input) {
+		var a = document.createElement('a');
+		a.href = input;
+		return a.hostname;
 	}},
 });
 

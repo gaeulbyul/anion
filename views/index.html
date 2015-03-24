@@ -139,6 +139,15 @@
 							<div class="label">장르</div>
 							<div class="value">{{ani.genre | genre}}</div>
 						</div>
+						<div class="row" ng-if="ani.homepage">
+							<div class="label">홈페이지</div>
+							<div class="value">
+								<a href="{{ani.homepage}}" title="{{ani.homepage}}">
+									<img src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
+									{{ani.homepage | urlhost}}
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

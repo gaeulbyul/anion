@@ -80,7 +80,7 @@ route.get('/api/ani', function(req, res, next) {
 
 route.get('/api/cap', function(req, res, next) {
 	var aniID = req.query.id;
-	Anissia.getAni(aniID)
+	Anissia.getAniCaptions(aniID)
 		.then(function (ani) {
 			return res.status(200).json(ani);
 		})
