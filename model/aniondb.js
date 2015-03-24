@@ -1,20 +1,13 @@
 var Sequelize = require('sequelize');
 
 function AniONDB (dbconfig) {
-	this.config = dbconfig;
-	var seqoptions = {
+	this.seq = new Sequelize(dbconfig.url, {
 		dialect: 'postgres',
 		omitNull: true, // http://stackoverflow.com/a/14333057
 		dialectOptions: {
 			ssl: !!dbconfig.ssl, // http://stackoverflow.com/a/27688357
 		},
-	};
-	if (this.config.url) {
-		this.seq = new Sequelize(this.config.url, seqoptions);
-	} else {
-		seqoptions.host = dbconfig.host;
-		this.seq = new Sequelize(this.config.name, this.config.username, this.config.password, seqoptions);
-	}
+	});
 	this.seq.authenticate()
 		.complete(function(err) {
 			if (err) {
