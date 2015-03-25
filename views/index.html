@@ -7,13 +7,16 @@
 		<meta name="author" content="Zn">
 		<meta name="description" content="Ani-ON">
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="css/anion.css">
+		<link rel="apple-touch-icon" href="img/anion.png">
+		<link rel="icon" href="img/anion.png">
 	</head>
 	<body>
 		<div id="titlebar" class="titlewrap" ng-controller="TitlebarCtrler">
 			<div class="titleinwrap">
 				<div class="titlebar">
-				    <a id="left-button" class="button"></a>
+				    <a id="left-button" class="button" style="visibility:hidden"></a>
 				    <!--
 					<a id="left-button" class="button" ng-click="goBack($event)">
 						<img alt="메뉴" height="20" src="img/left.svg">
@@ -21,7 +24,7 @@
 					-->
 					<div class="title">Ani-ON</div>
 					<a id="right-button" class="button" ng-click="toggleMenu($event)">
-						<img alt="메뉴" height="20" src="img/menu.svg">
+						<i class="fa fa-bars"></i>
 					</a>
 				</div>
 				<div class="menuwrapper">
@@ -32,13 +35,11 @@
 						<div class="search-outer">
 							<div id="search">
 								<form id="searchform" ng-submit="searchAniList($event)">
-									<div class="innerwrap">
-										<div class="query">
-											<input type="search" name="q" placeholder="검색" ng-model="formdata.query">
-										</div>
-										<div class="submit">
-											<input type="submit" value="검색">
-										</div>
+									<div class="query">
+										<input type="search" name="q" placeholder="검색" ng-model="formdata.query">
+									</div>
+									<div class="submit">
+										<button type="submit"><i class="fa fa-search"></i></button>
 									</div>
 								</form>
 							</div>
