@@ -140,13 +140,16 @@
 							<div class="label">장르</div>
 							<div class="value">{{ani.genre | genre}}</div>
 						</div>
-						<div class="row" ng-if="ani.homepage">
+						<div class="row">
 							<div class="label">홈페이지</div>
-							<div class="value">
+							<div class="value" ng-if="ani.homepage">
 								<a href="{{ani.homepage}}" title="{{ani.homepage}}">
 									<img src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
 									{{ani.homepage | urlhost}}
 								</a>
+							</div>
+							<div class="value" ng-if="!ani.homepage">
+								찾을 수 없습니다.
 							</div>
 						</div>
 					</div>
