@@ -50,13 +50,12 @@
 							<a class="menu-item">차기 방영예정</a>
 							-->
 							<select id="ani-genres-select" ng-model="selectedGenre" ng-change="showByGenres($event)">
-								<option value="" selected>요일별 목록</option>
+								<option value="" selected>장르별 목록 ▼</option>
 								<option ng-repeat="genre in aniGenres track by $index" value="{{genre}}">
 									{{ genre }}
 								</option>
 							</select>
 						</div>
-						<hr class="divider">
 						<div class="menu-anilist-more">
 							<div style="display:table-row">
 								<a href="#/" class="menu-item" ng-class="{highlight: currentWeekday === 7}" ng-click="showWeekday($event, 7)">외전/극장판</a>
