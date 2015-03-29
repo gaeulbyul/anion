@@ -2,13 +2,13 @@
 
 var AniONUtils = {
 	parseDate: function (date8) {
-		if (date8.indexOf('999999') > 0) {
+		if (date8.indexOf('999999') > -1 || date8.indexOf('000') > -1) {
 			return moment(null);
 		}
 		return moment(date8, 'YYYYMMDD');
 	},
 	parseDate2: function (date8) {
-		if (date8.indexOf('999999') > 0) {
+		if (date8.indexOf('999999') > -1 || date8.indexOf('000') > -1) {
 			return moment(null);
 		}
 		return moment(date8, 'YYYYMMDD YYYYMM YYYY'.split(' '));
