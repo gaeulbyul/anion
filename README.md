@@ -2,17 +2,16 @@ Ani-ON
 =====
 https://anion.herokuapp.com
 
-Ani-ON은 [애니시아](http://www.anissia.net)의 [API](http://www.anissia.net/?m=1&b=4)를 이용하여 만든 간단한 웹 어플리케이션입니다.
+Ani-ON은 [애니시아](http://www.anissia.net)의 [애니편성표 API](http://www.anissia.net/?m=1&b=4)를 이용하여 만든 간단한 웹 어플리케이션입니다.
 
 특징
 -----
  - 모바일 웹 브라우저도 지원함.
  - 종영 애니메이션 목록도 볼 수 있음.
- - 검색 기능 제공.
+ - 검색 기능 및 장르별 보기 제공함.
 
 계획 중
 -----
-- 장르별로 보기
 - 리그베다위키 및 애니메타 등 타 웹사이트 이동하는 링크
 
 라이센스
