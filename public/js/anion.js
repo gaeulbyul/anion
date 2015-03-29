@@ -73,17 +73,6 @@ var AniONUtils = {
 				item.state = '(결방)';
 			}
 		}
-		/*
-		else {
-			startdate = AniONUtils.parseDate2(ani.startdate);
-			enddate = AniONUtils.parseDate2(ani.enddate);
-			if (startdate.isValid()) {
-				item.startdate = AniONUtils.formatDate(startdate);
-			} else {
-				item.startdate = '방영일 불명';
-			}
-		}
-		*/
 		return item;
 	},
 	escapeRegexp: function escapeRegexp (t) {
@@ -137,8 +126,7 @@ var AniON = angular.module('AniON', [
 	'MainCtrlers',
 ]);
 
-AniON
-	.config(function ($routeProvider) {
+AniON.config(function ($routeProvider) {
 		$routeProvider
 			.when('/', {
 				template: document.getElementById('T-anilist').innerHTML,
@@ -151,14 +139,12 @@ AniON
 			.otherwise({
 				redirectTo: '/',
 			});
-	})
-	.run(function ($location, AniListFactory) {
+	}).run(function ($location, AniListFactory) {
 		var path = $location.path();
 		if (path == '' || path == '/') {
 			AniListFactory.getTodayAniList();
 		}
-	})
-;;
+	});
 
 AniON.factory('AniListFactory', function($rootScope, $http) {
 	var current_weekday;
@@ -179,6 +165,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			if (typeof page == 'undefined') {
 				page = 1;
 			}
+			$rootScope.$broadcast('beforeAniList');
 			return $http.get('api/anilist/?weekday='+weekday+'&page='+page)
 				.success(function(r){
 					self.anis = r.result;
@@ -188,8 +175,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 						count: r.count,
 						page: page
 					});
-				})
-			;;
+				});
 		},
 		getTodayAniList: function () {
 			var weekday = new Date().getDay();
@@ -205,6 +191,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			if (typeof page == 'undefined') {
 				page = 1;
 			}
+			$rootScope.$broadcast('beforeAniList');
 			return $http.get('api/anilist/?search='+encodeURIComponent(query)+'&page='+page)
 				.success(function(r){
 					self.anis = r.result;
@@ -215,7 +202,6 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 						page: page
 					});
 				});
-			;;
 		},
 		broadcastAniList: function (params) {
 			// http://stackoverflow.com/a/11847277
@@ -230,18 +216,18 @@ AniON.factory('AniDetailFactory', function ($rootScope, $http) {
 		ani: [],
 		getAniDetail: function (id) {
 			var self = this;
+			$rootScope.$broadcast('beforeAniDetail');
 			return $http.get('api/ani/?id='+id)
 				.success(function(r){
 					self.ani = r;
-					self.broadcastAniDetail();
+					self.broadcastAniDetail(r);
 				})
 				.error(function(r) {
 					// console.error(r);
-				})
-			;;
+				});
 		},
-		broadcastAniDetail: function (params) {
-			$rootScope.$broadcast('gotAniDetail' /*, params */);
+		broadcastAniDetail: function (ani) {
+			$rootScope.$broadcast('gotAniDetail', ani);
 		},
 	};
 });
@@ -255,65 +241,61 @@ AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
 				.success(function(r){
 					self.caps = r;
 					self.broadcastAniCaptions();
-				})
-				.error(function(r) {
-					console.error(r);
-				})
-			;;
+				});
 		},
-		broadcastAniCaptions: function (params) {
-			$rootScope.$broadcast('gotAniCaptions' /*, params */);
+		broadcastAniCaptions: function () {
+			$rootScope.$broadcast('gotAniCaptions');
 		},
 	};
 });
 
 AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniListFactory) {
 	//http://stackoverflow.com/q/12618342
-	$scope.loading = true;
 	$scope.formdata = {};
 	$scope.menuVisible = false;
+	$scope.currentWeekday = null;
 	$scope.toggleMenu = function ($event) {
 		$scope.menuVisible = !$scope.menuVisible;
-	}
-	$scope.currentMode = null;
-	$scope.currentWeekday = null;
-	$scope.currentPage = null;
-	$scope.currentQuery = null;
+	};
 	$scope.$on('gotAniList', function (event, params) {
-		$scope.loading = false;
-		$scope.currentPage = params.page;
-		$scope.currentMode = params.amode;
+		$scope.menuVisible = false;
 		if (params.amode == 'w') {
 			$scope.currentWeekday = params.weekday;
-			$scope.currentQuery = null;
 		} else if (params.amode == 's') {
 			$scope.currentWeekday = null;
-			$scope.currentQuery = params.query;
 		}
-		$scope.menuVisible = false;
-		$scope.leftIsBack = false;
-	});
-
-	$scope.$on('gotAniDetail', function (event) {
-		$scope.loading = false;
 	});
 	$scope.showWeekday = function ($event, weekday) {
-		// var target = $event.currentTarget;
-		$scope.loading = true;
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
 	};
 	$scope.searchAniList = function ($event) {
-		// var target = $event.currentTarget;
-		$scope.loading = true;
 		$location.path('/');
 		AniListFactory.searchAniList($scope.formdata.query);
 		window.scrollTo(0, 0);
 	};
 });
 
-AniON.controller('MainViewCtrler', function ($scope) {
-	//
+AniON.controller('MainViewCtrler', function ($scope, $rootScope) {
+	$scope.loading = true;
+	$scope.$on('beforeAniList', function (event) {
+		$scope.loading = true;
+	});
+	$scope.$on('beforeAniDetail', function (event) {
+		$scope.loading = true;
+	});
+	$scope.$on('gotAniList', function (event, params) {
+		$scope.loading = false;
+		if (params.amode == 'w') {
+			$rootScope.title = 'Ani-ON';
+		} else if (params.amode == 's') {
+			$rootScope.title = '"' + params.query + '"에 대한 검색 결과 – Ani-ON';
+		}
+	});
+	$scope.$on('gotAniDetail', function (event, ani) {
+		$scope.loading = false;
+		$rootScope.title = ani.title + ' – Ani-ON';
+	});
 });
 
 var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
@@ -323,7 +305,6 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 		AniListFactory.getRecentAniList();
 	};
 	$scope.$on('gotAniList', function (event, params) {
-		$scope.loading = false;
 		if (AniListFactory.anis.length > 0) {
 			$scope.anis = AniListFactory.anis.map(function (ani) {
 				return AniONUtils.makeItem(ani, params);
@@ -372,8 +353,7 @@ MainCtrlers.controller('AniDetailCtrler',
 			.error(function (r) {
 				alert('찾을 수 없습니다!');
 				$window.history.back();
-			})
-		;;
+			});
 		AniCaptionFactory.getCaptions(id);
 	});
 	$scope.$on('gotAniDetail', function (event) {

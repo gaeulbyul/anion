@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html ng-app="AniON">
 	<head>
-		<title>Ani-ON</title>
+		<!-- 로딩중에 {{}}가 보이므로, ng-bind를 이용 -->
+		<title ng-bind="title">Ani-ON</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 		<meta name="author" content="Zn">
@@ -73,11 +74,11 @@
 					</nav>
 				</div>
 			</div>
+		</div>
+		<main id="main" ng-controller="MainViewCtrler">
 			<div id="loading" ng-if="loading">
 				<img src="img/puff.svg">
 			</div>
-		</div>
-		<main id="main" ng-controller="MainViewCtrler">
 			<ng-view></ng-view>
 		</main>
 		<footer>
