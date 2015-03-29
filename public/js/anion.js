@@ -314,7 +314,12 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		window.scrollTo(0, 0);
 	};
 	$scope.showByGenres = function ($event) {
-		AniListFactory.getByGenreAniList($scope.selectedGenre, 1)
+		var selectedGenre = $scope.selectedGenre;
+		if (selectedGenre !== '') {
+			AniListFactory.getByGenreAniList(selectedGenre, 1);
+		} else {
+			AniListFactory.getTodayAniList();
+		}
 	};
 });
 

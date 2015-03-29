@@ -50,7 +50,7 @@
 							<a class="menu-item">차기 방영예정</a>
 							-->
 							<select id="ani-genres-select" ng-model="selectedGenre" ng-change="showByGenres($event)">
-								<option value="" selected>모든 장르</option>
+								<option value="" selected>요일별 목록</option>
 								<option ng-repeat="genre in aniGenres track by $index" value="{{genre}}">
 									{{ genre }}
 								</option>
