@@ -293,9 +293,13 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	};
 	$scope.$on('gotAniList', function (event, params) {
 		$scope.menuVisible = false;
-		if (params.amode == 'w') {
+		var amode = params.amode;
+		if (amode != 'g') {
+			$scope.selectedGenre = '';
+		}
+		if (amode == 'w') {
 			$scope.currentWeekday = params.weekday;
-		} else if (params.amode == 's' || params.amode == 'g') {
+		} else if (amode == 's' || amode == 'g') {
 			$scope.currentWeekday = null;
 		}
 	});
