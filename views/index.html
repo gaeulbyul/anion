@@ -47,9 +47,14 @@
 						</div>
 						<div class="menu-main">
 							<!--
-							<a class="menu-item">장르별로 보기 <small>(구현 예정)</small></a>
 							<a class="menu-item">차기 방영예정</a>
 							-->
+							<select id="ani-genres-select" ng-model="selectedGenre" ng-change="showByGenres($event)">
+								<option value="" selected>모든 장르</option>
+								<option ng-repeat="genre in aniGenres track by $index" value="{{genre}}">
+									{{ genre }}
+								</option>
+							</select>
 						</div>
 						<hr class="divider">
 						<div class="menu-anilist-more">

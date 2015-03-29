@@ -44,7 +44,9 @@ route.get('/api/anilist', function(req, res, next) {
 		dbquery.order = ['weekday', 'index'];
 	} else if (req.query.genre) {
 		dbquery.where = {
-			genre: req.query.genre
+			genre: {
+				$like: '%'+req.query.genre+'%'
+			}
 		};
 		dbquery.order = ['weekday', 'index'];
 	} else {
@@ -71,7 +73,7 @@ route.get('/api/anilist', function(req, res, next) {
 });
 
 route.get('/api/genres', function(req, res, next) {
-	aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres"', {
+	aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres" ORDER BY "genre"', {
 		type: AniONDB.Sequelize.QueryTypes.SELECT
 	}).then(function (genres) {
 		return res.status(200).json(_.pluck(genres, 'genre'));

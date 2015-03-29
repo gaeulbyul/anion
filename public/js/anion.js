@@ -149,6 +149,7 @@ AniON.config(function ($routeProvider) {
 AniON.factory('AniListFactory', function($rootScope, $http) {
 	var current_weekday;
 	var current_query;
+	var current_genre;
 	return {
 		anis: [],
 		recent: {},
@@ -203,10 +204,39 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 					});
 				});
 		},
+		getByGenreAniList: function (genre, page) {
+			var self = this;
+			if (genre === -1) {
+				genre = current_genre;
+			} else {
+				current_genre = genre;
+			}
+			if (typeof page == 'undefined') {
+				page = 1;
+			}
+			$rootScope.$broadcast('beforeAniList');
+			return $http.get('api/anilist/?genre='+encodeURIComponent(genre)+'&page='+page)
+				.success(function(r){
+					self.anis = r.result;
+					self.broadcastAniList({
+						amode: 'g',
+						genre: genre,
+						count: r.count,
+						page: page
+					});
+				});
+		},
 		broadcastAniList: function (params) {
 			// http://stackoverflow.com/a/11847277
 			this.recent = params;
 			$rootScope.$broadcast('gotAniList', params);
+		},
+		getAniGenres: function () {
+			var self = this;
+			return $http.get('api/genres')
+				.success(function (r) {
+					$rootScope.$broadcast('gotAniGenres', r);
+				});
 		},
 	};
 });
@@ -254,17 +284,26 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	$scope.formdata = {};
 	$scope.menuVisible = false;
 	$scope.currentWeekday = null;
+	$scope.aniGenres = [];
 	$scope.toggleMenu = function ($event) {
 		$scope.menuVisible = !$scope.menuVisible;
+		if ($scope.aniGenres.length == 0) {
+			AniListFactory.getAniGenres();
+		}
 	};
 	$scope.$on('gotAniList', function (event, params) {
 		$scope.menuVisible = false;
 		if (params.amode == 'w') {
 			$scope.currentWeekday = params.weekday;
-		} else if (params.amode == 's') {
+		} else if (params.amode == 's' || params.amode == 'g') {
 			$scope.currentWeekday = null;
 		}
 	});
+	$scope.$on('gotAniGenres', function (event, params) {
+		if ($scope.aniGenres.length == 0) {
+			$scope.aniGenres = params;
+		}
+	})
 	$scope.showWeekday = function ($event, weekday) {
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
@@ -273,6 +312,9 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		$location.path('/');
 		AniListFactory.searchAniList($scope.formdata.query);
 		window.scrollTo(0, 0);
+	};
+	$scope.showByGenres = function ($event) {
+		AniListFactory.getByGenreAniList($scope.selectedGenre, 1)
 	};
 });
 
@@ -330,7 +372,19 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
 		}
 	});
 	$scope.showPage = function ($event, page) {
-		AniListFactory[($scope.current_listmode == 'w' ? 'get' : 'search')+'AniList'](-1, page);
+		var methodname;
+		switch ($scope.current_listmode) {
+			case 'w':
+				methodname = 'getAniList';
+				break;
+			case 's':
+				methodname = 'searchAniList';
+				break;
+			case 'g':
+				methodname = 'getByGenreAniList';
+				break;
+		}
+		AniListFactory[methodname](-1, page);
 		window.scrollTo(0, 0);
 	};
 });
