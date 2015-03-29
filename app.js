@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
 var Q = require('q');
+var _ = require('underscore');
 
 var AniONDB = require('./model/aniondb');
 var Anissia = require('./lib/anissia');
@@ -41,6 +42,11 @@ route.get('/api/anilist', function(req, res, next) {
 			'LOWER(title) LIKE LOWER(?)', '%'+req.query.search+'%'
 		];
 		dbquery.order = ['weekday', 'index'];
+	} else if (req.query.genre) {
+		dbquery.where = {
+			genre: req.query.genre
+		};
+		dbquery.order = ['weekday', 'index'];
 	} else {
 		if (weekday < 9) {
 			dbquery.where = {
@@ -62,6 +68,14 @@ route.get('/api/anilist', function(req, res, next) {
 		return res.status(200).json(result);
 	});
 
+});
+
+route.get('/api/genres', function(req, res, next) {
+	aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres"', {
+		type: AniONDB.Sequelize.QueryTypes.SELECT
+	}).then(function (genres) {
+		return res.status(200).json(_.pluck(genres, 'genre'));
+	});
 });
 
 route.get('/api/ani', function(req, res, next) {
