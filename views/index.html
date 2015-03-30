@@ -23,7 +23,7 @@
 						<img alt="메뉴" height="20" src="img/left.svg">
 					</a>
 					-->
-					<div class="title">Ani-ON</div>
+					<a class="title" href="." target="_self">Ani-ON</a>
 					<a id="right-button" class="button" ng-click="toggleMenu($event)">
 						<i class="fa fa-bars"></i>
 					</a>
@@ -80,7 +80,7 @@
 			</div>
 		</div>
 		<main id="main" ng-controller="MainViewCtrler">
-			<div id="loading" ng-if="loading">
+			<div id="loading" ng-show="loading">
 				<img src="img/puff.svg">
 			</div>
 			<ng-view></ng-view>
