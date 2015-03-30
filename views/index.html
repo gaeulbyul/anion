@@ -118,64 +118,69 @@
 			</div>
 		</script>
 		<script type="text/x-template" id="T-anidetail">
-			<div class="header">
-				<div class="title">
-					<span class="text">{{ani.title}}</span>
-					<span class="state" ng-if="ani.state">{{ani.state}}</span>
+			<div id="ani-detail" ng-controller="AniDetailCtrler">
+				<div class="loadmsg" ng-show="loading">
+					로딩중……
 				</div>
-				<div class="info">
-					<div class="text">
-						<div class="row" ng-if="ani.comingsoon">
-							<div class="label">방영예정날짜</div>
-							<div class="value">{{ani.comingsoon}}</div>
-						</div>
-						<div class="row" ng-if="ani.weekday < 7 && !ani.ended">
-							<div class="label">시간</div>
-							<div class="value">{{ani.weekday | weekday}} {{ani.time | time4}}</div>
-						</div>
-						<div class="row" ng-if="ani.weekday > 6 || ani.ended">
-							<div class="label">방영날짜</div>
-							<div class="value">{{ani.startdate | date8}}</div>
-						</div>
-						<div class="row" ng-if="ani.ended">
-							<div class="label">종영날짜</div>
-							<div class="value">{{ani.enddate | date8}}</div>
-						</div>
-						<div class="row">
-							<div class="label">장르</div>
-							<div class="value">{{ani.genre | genre}}</div>
-						</div>
-						<div class="row">
-							<div class="label">홈페이지</div>
-							<div class="value" ng-if="ani.homepage">
-								<a href="{{ani.homepage}}" title="{{ani.homepage}}">
-									<img src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
-									{{ani.homepage | urlhost}}
-								</a>
+				<div class="header" ng-hide="loading">
+					<div class="title">
+						<span class="text">{{ani.title}}</span>
+						<span class="state" ng-if="ani.state">{{ani.state}}</span>
+					</div>
+					<div class="info">
+						<div class="text">
+							<div class="row" ng-if="ani.comingsoon">
+								<div class="label">방영예정날짜</div>
+								<div class="value">{{ani.comingsoon}}</div>
 							</div>
-							<div class="value" ng-if="!ani.homepage">
-								찾을 수 없습니다.
+							<div class="row" ng-if="ani.weekday < 7 && !ani.ended">
+								<div class="label">시간</div>
+								<div class="value">{{ani.weekday | weekday}} {{ani.time | time4}}</div>
+							</div>
+							<div class="row" ng-if="ani.weekday > 6 || ani.ended">
+								<div class="label">방영날짜</div>
+								<div class="value">{{ani.startdate | date8}}</div>
+							</div>
+							<div class="row" ng-if="ani.ended">
+								<div class="label">종영날짜</div>
+								<div class="value">{{ani.enddate | date8}}</div>
+							</div>
+							<div class="row">
+								<div class="label">장르</div>
+								<div class="value">{{ani.genre | genre}}</div>
+							</div>
+							<div class="row">
+								<div class="label">홈페이지</div>
+								<div class="value" ng-if="ani.homepage">
+									<a href="{{ani.homepage}}" title="{{ani.homepage}}">
+										<img src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
+										{{ani.homepage | urlhost}}
+									</a>
+								</div>
+								<div class="value" ng-if="!ani.homepage">
+									찾을 수 없습니다.
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="content">
-				<div class="group-name">자막 ({{caps.length}}개)</div>
-					<div class="group captions">
-						<a class="caption" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" href="{{cap.url}}" title="{{cap.url}}" ng-repeat="cap in caps track by $index">
-							<div class="episode">{{cap.episode}}화</div>
-							<div class="name">{{cap.name}}</div>
-							<div class="updateat">{{cap.updateat | datetime14}}</div>
-						</a>
-						<div ng-if="caps_loading">
-							<div class="caps-loading">
-								로딩중……
+				<div class="content" ng-hide="loading">
+					<div class="group-name">자막 ({{caps.length}}개)</div>
+						<div class="group captions">
+							<a class="caption" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" href="{{cap.url}}" title="{{cap.url}}" ng-repeat="cap in caps track by $index">
+								<div class="episode">{{cap.episode}}화</div>
+								<div class="name">{{cap.name}}</div>
+								<div class="updateat">{{cap.updateat | datetime14}}</div>
+							</a>
+							<div ng-if="caps_loading">
+								<div class="caps-loading">
+									로딩중……
+								</div>
 							</div>
-						</div>
-						<div ng-if="!caps_loading && caps.length == 0">
-							<div class="notfound">
-								자막제작자를 찾을 수 없습니다.
+							<div ng-if="!caps_loading && caps.length == 0">
+								<div class="notfound">
+									자막제작자를 찾을 수 없습니다.
+								</div>
 							</div>
 						</div>
 					</div>
