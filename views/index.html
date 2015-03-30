@@ -100,7 +100,7 @@
 					<div class="info">
 						<span class="weekday" ng-if="ani.amode != 'w'">{{ani.weekday | weekday}}</span>
 						<span class="time" ng-if="ani.weekday < 7">{{ani.time | time4}}</span>
-						<span class="time" ng-if="ani.weekday == 7 || ani.weekday == 8">{{ani.startdate | date8}}</span>
+						<span class="time" ng-if="ani.weekday == 7 || ani.weekday == 8">{{ani.startdate | date8_2}}</span>
 						<span class="time" ng-if="ani.ended">| {{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
 						<br>
 						<span class="state" ng-if="ani.state">{{ani.state}}</span>
@@ -139,11 +139,11 @@
 							</div>
 							<div class="row" ng-if="ani.weekday > 6 || ani.ended">
 								<div class="label">방영날짜</div>
-								<div class="value">{{ani.startdate | date8}}</div>
+								<div class="value">{{ani.startdate | date8_2}}</div>
 							</div>
 							<div class="row" ng-if="ani.ended">
 								<div class="label">종영날짜</div>
-								<div class="value">{{ani.enddate | date8}}</div>
+								<div class="value">{{ani.enddate | date8_2}}</div>
 							</div>
 							<div class="row">
 								<div class="label">장르</div>

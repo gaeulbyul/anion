@@ -1,4 +1,5 @@
 'use strict';
+/* global angular, moment */
 
 var AniONUtils = {
 	parseDate: function (date8) {
@@ -22,6 +23,20 @@ var AniONUtils = {
 				'YYYYMMDD': 'YYYY/MM/DD',
 				'YYYYMM': 'YYYY/MM',
 				'YYYY': 'YYYY/??',
+			}[date8m._f]);
+		} else {
+			return '???';
+		}
+	},
+	formatDate2: function (date8m) {
+		if (typeof date8m == 'string') {
+			date8m = AniONUtils.parseDate2(date8m);
+		}
+		if (moment.isMoment(date8m) && date8m.isValid()) {
+			return date8m.format({
+				'YYYYMMDD': 'YYYY년 M월 DD일',
+				'YYYYMM': 'YYYY년 M월',
+				'YYYY': 'YYYY년?',
 			}[date8m._f]);
 		} else {
 			return '???';
@@ -93,6 +108,7 @@ angular.module('AniONFilters', []).filter({
 	}},
 	time4: function() {return AniONUtils.formatTime},
 	date8: function() {return AniONUtils.formatDate},
+	date8_2: function() {return AniONUtils.formatDate2},
 	datetime14: function (){return function (input) {
 		var m = moment(input, 'YYYYMMDDHHmmss');
 		if (m.isValid()) {
@@ -141,7 +157,7 @@ AniON.config(function ($routeProvider) {
 			});
 	}).run(function ($location, AniListFactory) {
 		var path = $location.path();
-		if (path == '' || path == '/') {
+		if (path === '' || path == '/') {
 			AniListFactory.getTodayAniList();
 		}
 	});
@@ -287,7 +303,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	$scope.aniGenres = [];
 	$scope.toggleMenu = function ($event) {
 		$scope.menuVisible = !$scope.menuVisible;
-		if ($scope.aniGenres.length == 0) {
+		if ($scope.aniGenres.length === 0) {
 			AniListFactory.getAniGenres();
 		}
 	};
@@ -304,10 +320,10 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		}
 	});
 	$scope.$on('gotAniGenres', function (event, params) {
-		if ($scope.aniGenres.length == 0) {
+		if ($scope.aniGenres.length === 0) {
 			$scope.aniGenres = params;
 		}
-	})
+	});
 	$scope.showWeekday = function ($event, weekday) {
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
