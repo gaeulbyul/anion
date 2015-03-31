@@ -89,13 +89,15 @@ hr
 		color #fff
 		font-size 16pt
 		font-weight bold
+		a
+			color #fff
 	.button
 		display table-cell
 		border 0
-		padding 12px 20px
+		padding 10px 20px
 		width 50px
 		color #fff
-		font-size 14pt
+		font-size 16pt
 		&:hover
 			background-color lighten($black1, 10%)
 
@@ -152,7 +154,7 @@ footer
 				display block
 				padding 7px 20px
 				font-size 12pt
-				color $text-color3
+				color #fff
 				&:after
 					content '>'
 					float right
@@ -166,7 +168,7 @@ footer
 				width 33.333%
 				padding 7px 5px
 				text-align center
-				color $text-color3
+				color #fff
 				white-space nowrap
 				&.highlight
 					border-bottom 3px solid $blue1
@@ -180,11 +182,6 @@ footer
 			border-radius 3px
 			background-color $black2
 			color #fff
-		#today
-			text-align center
-			.date
-				font-size 10pt
-				color $text-color3
 		.search-outer
 			padding 3px 0
 			background-image linear-gradient(to bottom, $black1 0%, $black2 100%)
@@ -201,7 +198,7 @@ footer
 				background-color $black2
 				input, button
 					padding 5px
-					color $text-color3
+					color #fff
 					user-select text
 					border 0
 					background-color transparent
@@ -229,7 +226,7 @@ footer
 		text-align center
 		margin 0
 		padding 7px 5px
-		color $text-color3
+		color #fff
 		border-bottom-width 3px
 		border-bottom-style solid
 		&.highlight
@@ -246,7 +243,7 @@ footer
 	width 100%
 	.item
 		display block
-		padding 10px 20px
+		padding 10px 25px
 		background-color #fff
 		&:hover
 			background-color #f6f6f6
@@ -266,7 +263,6 @@ footer
 				color $green2
 			.weekday
 				display inline-block
-				// margin-right .5em
 				border 1px solid #ccc
 				border-radius 3px
 				padding 0 5px
@@ -277,13 +273,12 @@ footer
 
 
 #pages
-	border-top 1px solid #ddd
 	padding 0
 	text-align center
 	.page
 		display inline-block
-		padding 3px 10px
-		margin 5px
+		padding 5px 12px
+		margin 3px
 		border 1px solid #ddd
 		color $text-color1
 		&.highlight

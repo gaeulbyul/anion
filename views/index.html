@@ -23,16 +23,13 @@
 						<img alt="메뉴" height="20" src="img/left.svg">
 					</a>
 					-->
-					<a class="title" href="." target="_self">Ani-ON</a>
+					<div class="title"><a href="." target="_self">Ani-ON</a></div>
 					<a id="right-button" class="button" ng-click="toggleMenu($event)">
 						<i class="fa fa-bars"></i>
 					</a>
 				</div>
 				<div class="menuwrapper">
 					<div id="menu" ng-show="menuVisible">
-						<!--
-						<div id="today"><span class="date"></span></div>
-						-->
 						<div class="search-outer">
 							<div id="search">
 								<form id="searchform" ng-submit="searchAniList($event)">
@@ -46,9 +43,6 @@
 							</div>
 						</div>
 						<div class="menu-main">
-							<!--
-							<a class="menu-item">차기 방영예정</a>
-							-->
 							<select id="ani-genres-select" ng-model="selectedGenre" ng-change="showByGenres($event)">
 								<option value="" selected>장르별 목록 ▼</option>
 								<option ng-repeat="genre in aniGenres track by $index" value="{{genre}}">
@@ -187,9 +181,6 @@
 				</div>
 			</div>
 		</script>
-		<!--
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		-->
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment-with-locales.min.js"></script>
 		<script>moment.locale('ko');</script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js"></script>
