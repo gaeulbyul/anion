@@ -161,7 +161,7 @@
 				<div class="content" ng-hide="loading">
 					<div class="group-name">자막 ({{caps.length}}개)</div>
 						<div class="group captions">
-							<a class="caption" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" href="{{cap.url}}" title="{{cap.url}}" ng-repeat="cap in caps track by $index">
+							<a class="caption" href="{{cap.url}}" title="{{cap.url}}" target="_blank" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" ng-repeat="cap in caps track by $index">
 								<div class="episode">{{cap.episode}}화</div>
 								<div class="name">{{cap.name}}</div>
 								<div class="updateat">{{cap.updateat | datetime14}}</div>
