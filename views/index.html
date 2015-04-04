@@ -98,7 +98,7 @@
 						<span class="time" ng-if="ani.ended">{{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
 						<br>
 						<span class="state" ng-if="ani.state">{{ani.state}}</span>
-						<span class="genre">{{ani.genre | genre}}</span>
+						<span class="genre" ng-bind-html="ani.genre | genre | highlight:ani.genre_query"></span>
 					</div>
 				</a>
 				<div class="no-result" ng-show="anis.length == 0">

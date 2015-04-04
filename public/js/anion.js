@@ -66,6 +66,7 @@ var AniONUtils = {
 			enddate: ani.enddate,
 			amode: params.amode,
 			query: params.query,
+			genre_query: params.genre,
 		};
 		var startdate = AniONUtils.parseDate(ani.startdate);
 		var enddate = AniONUtils.parseDate(ani.enddate);
