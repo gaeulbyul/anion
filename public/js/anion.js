@@ -80,7 +80,7 @@ var AniONUtils = {
 				}
 			}
 			//completed
-			if (enddate.isValid() && today >= ani.enddate) {
+			if (enddate.isValid() && today >= ani.enddate && !ani.ended) {
 				item.state = '(완결)';
 			}
 			// absent

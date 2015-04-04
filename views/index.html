@@ -93,9 +93,9 @@
 					<div class="title" ng-bind-html="ani.title | highlight:ani.query"></div>
 					<div class="info">
 						<span class="weekday" ng-if="ani.amode != 'w'">{{ani.weekday | weekday}}</span>
-						<span class="time" ng-if="ani.weekday < 7">{{ani.time | time4}}</span>
-						<span class="time" ng-if="ani.weekday == 7 || ani.weekday == 8">{{ani.startdate | date8_2}}</span>
-						<span class="time" ng-if="ani.ended">| {{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
+						<span class="time" ng-if="ani.weekday < 7 && !ani.ended">{{ani.time | time4}}</span>
+						<span class="time" ng-if="(ani.weekday == 7 || ani.weekday == 8) && !ani.ended">{{ani.startdate | date8_2}}</span>
+						<span class="time" ng-if="ani.ended">{{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
 						<br>
 						<span class="state" ng-if="ani.state">{{ani.state}}</span>
 						<span class="genre">{{ani.genre | genre}}</span>
