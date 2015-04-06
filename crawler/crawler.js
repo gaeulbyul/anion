@@ -33,7 +33,7 @@ function callback (db) {
 	};
 }
 
-Q()
+aniondb.seq.query('DELETE FROM ani_genres')
 .then(function () {
 	function crawlOneWeekday (weekday) {
 		return Q.all([
