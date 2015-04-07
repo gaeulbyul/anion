@@ -392,13 +392,13 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 	});
 	$scope.swipeLeft = function ($event) {
 		var weekday = $scope.currentWeekday;
-		if (weekday !== null) {
+		if (weekday !== null && weekday <= 6) {
 			AniListFactory.getAniList(weekday < 6 ? weekday + 1 : 0);
 		}
 	};
 	$scope.swipeRight = function ($event) {
 		var weekday = $scope.currentWeekday;
-		if (weekday !== null) {
+		if (weekday !== null && weekday <= 6) {
 			AniListFactory.getAniList(weekday > 0 ? weekday - 1 : 6);
 		}
 	};
