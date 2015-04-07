@@ -73,7 +73,7 @@ route.get('/api/anilist', function(req, res, next) {
 });
 
 route.get('/api/genres', function(req, res, next) {
-	aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres" ORDER BY "genre"', {
+	aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres"', {
 		type: AniONDB.Sequelize.QueryTypes.SELECT
 	}).then(function (genres) {
 		return res.status(200).json(_.pluck(genres, 'genre'));

@@ -252,7 +252,7 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
 			var self = this;
 			return $http.get('api/genres')
 				.success(function (r) {
-					$rootScope.$broadcast('gotAniGenres', r);
+					$rootScope.$broadcast('gotAniGenres', r.sort());
 				});
 		},
 	};
