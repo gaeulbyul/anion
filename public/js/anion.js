@@ -140,6 +140,7 @@ angular.module('AniONFilters', []).filter({
 
 var AniON = angular.module('AniON', [
 	'ngRoute',
+	'ngTouch',
 	'MainCtrlers',
 ]);
 
@@ -348,6 +349,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 
 AniON.controller('MainViewCtrler', function ($scope, $rootScope) {
 	$scope.loading = true;
+	$scope.currentWeekday = null;
 	$scope.$on('beforeAniList', function (event) {
 		$scope.loading = true;
 	});
@@ -358,8 +360,12 @@ AniON.controller('MainViewCtrler', function ($scope, $rootScope) {
 		$scope.loading = false;
 		if (params.amode == 'w') {
 			$rootScope.title = 'Ani-ON';
-		} else if (params.amode == 's') {
-			$rootScope.title = '"' + params.query + '"에 대한 검색 결과 – Ani-ON';
+			$scope.currentWeekday = params.weekday;
+		} else {
+			$scope.currentWeekday = null;
+			if (params.amode == 's') {
+				$rootScope.title = '"' + params.query + '"에 대한 검색 결과 – Ani-ON';
+			}
 		}
 	});
 	$scope.$on('gotAniDetail', function (event, ani) {
@@ -384,6 +390,18 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 		}
 		document.getElementById('main').className = 'main-ani-list';
 	});
+	$scope.swipeLeft = function ($event) {
+		var weekday = $scope.currentWeekday;
+		if (weekday !== null && weekday <= 6) {
+			AniListFactory.getAniList(weekday < 6 ? weekday + 1 : 0);
+		}
+	};
+	$scope.swipeRight = function ($event) {
+		var weekday = $scope.currentWeekday;
+		if (weekday !== null && weekday <= 6) {
+			AniListFactory.getAniList(weekday > 0 ? weekday - 1 : 6);
+		}
+	};
 });
 
 MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
