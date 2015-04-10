@@ -441,8 +441,10 @@ MainCtrlers.controller('AniDetailCtrler',
 	$scope.ani = {};
 	$scope.caps = [];
 	$scope.caps_loading = true;
-	$scope.checklink = function (event, url) {
-		if (!url) {
+	$scope.checklink = function ($event, url) {
+		if (url) {
+			location.href = url;
+		} else {
 			event.preventDefault();
 			alert('주소가 등록되어있지 않습니다.');
 		}
