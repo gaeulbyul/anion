@@ -52,7 +52,8 @@ route.get('/api/anilist', function(req, res, next) {
 	} else {
 		if (weekday < 9) {
 			dbquery.where = {
-				weekday: weekday
+				weekday: weekday,
+				ended: false
 			};
 			dbquery.order = ['index', 'weekday'];
 		} else {
