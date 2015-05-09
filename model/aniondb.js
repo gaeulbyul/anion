@@ -9,7 +9,7 @@ function AniONDB (dbconfig) {
 		},
 	});
 	this.seq.authenticate()
-		.complete(function(err) {
+		.then(function(err) {
 			if (err) {
 				console.error('Error on connection db: %s', err);
 			}
