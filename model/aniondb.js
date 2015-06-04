@@ -9,12 +9,9 @@ function AniONDB (dbconfig) {
 		},
 	});
 	this.seq.authenticate()
-		.then(function(err) {
-			if (err) {
-				console.error('Error on connection db: %s', err);
-			}
-		})
-	;;
+		.catch(function(err) {
+			console.error('Error on connection db: %s', err);
+		});
 	this.Ani = this.seq.define('Ani', {
 		id: {
 			type: Sequelize.INTEGER,

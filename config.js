@@ -6,6 +6,6 @@ module.exports = {
 	useragent: env.ANION_USERAGENT || 'Ani-ON Crawler',
 	database: {
 		url : env.DATABASE_URL,
-		ssl: true,
+		ssl: !!env.DATABASE_USE_SSL,
 	},
 };
