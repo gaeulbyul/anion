@@ -115,7 +115,7 @@ angular.module('AniONFilters', []).filter({
 		var m = moment(input, 'YYYYMMDDHHmmss');
 		if (m.isValid()) {
 			// return m.format('YYYY/MM/DD HH:mm:ss');
-			return m.format('YYYY/MM/DD A h:mm:ss');
+			return m.format('YYYY/MM/DD A h:mm');
 		} else {
 			return '???';
 		}
