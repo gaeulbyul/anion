@@ -89,6 +89,7 @@ var AniONUtils = {
 				item.state = '(결방)';
 			}
 		}
+		item.notice = /anissia\.net/.test(ani.homepage);
 		return item;
 	},
 	escapeRegexp: function escapeRegexp (t) {
