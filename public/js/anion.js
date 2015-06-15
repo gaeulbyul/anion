@@ -305,6 +305,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 	$scope.currentWeekday = null;
 	$scope.aniGenres = [];
 	$scope.toggleMenu = function ($event) {
+		$event.preventDefault();
 		$scope.menuVisible = !$scope.menuVisible;
 		if ($scope.aniGenres.length === 0) {
 			AniListFactory.getAniGenres();
