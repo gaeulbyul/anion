@@ -129,7 +129,7 @@
 								<div class="label">시간</div>
 								<div class="value">{{ani.weekday | weekday}} {{ani.time | time4}}</div>
 							</div>
-							<div class="row">
+							<div class="row" ng-if="!ani.comingsoon">
 								<div class="label">방영날짜</div>
 								<div class="value">{{ani.startdate | date8_2}}</div>
 							</div>
