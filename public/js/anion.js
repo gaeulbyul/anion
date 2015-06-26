@@ -67,10 +67,13 @@ var AniONUtils = {
 			amode: params.amode,
 			query: params.query,
 			genre_query: params.genre,
+			comingsoon: false,
+			completed: false,
+			absent: false,
 		};
 		var startdate = AniONUtils.parseDate(ani.startdate);
 		var enddate = AniONUtils.parseDate(ani.enddate);
-		if (ani.weekday < 7) {
+		if (item.weekday < 7) {
 			// coming soon
 			if (startdate.isValid() && today < ani.startdate) {
 				item.comingsoon = startdate.format('ll');
@@ -78,15 +81,18 @@ var AniONUtils = {
 					item.state = '[' + (
 						startdate.format('MM/DD')
 					) + ']';
+					item.comingsoon = true;
 				}
 			}
-			//completed
+			// completed
 			if (enddate.isValid() && today >= ani.enddate && !ani.ended) {
 				item.state = '(완결)';
+				item.completed = true;
 			}
 			// absent
 			if (!ani.ended && !ani.broaded) {
 				item.state = '(결방)';
+				item.absent = true;
 			}
 		}
 		item.notice = /anissia\.net/.test(ani.homepage);
@@ -95,7 +101,32 @@ var AniONUtils = {
 	escapeRegexp: function escapeRegexp (t) {
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 		return t.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-	}
+	},
+	reorderAnis: function (anilist) {
+		var anis = [],
+			anis_completed = [],
+			anis_comingsoon = [];
+		anilist.forEach(function (ani) {
+			console.group('item');
+			console.dir(ani);
+			console.groupEnd('item');
+			var t = anis;
+			if (ani.comingsoon) {
+				t = anis_comingsoon;
+			} else if (ani.completed) {
+				t = anis_completed;
+			}
+			t.push(ani);
+		});
+		var result = anis.concat(anis_comingsoon, anis_completed);
+		//console.dir(result);
+		console.group('anis');
+		console.dir(anis);
+		console.dir(anis_completed);
+		console.dir(anis_comingsoon);
+		console.groupEnd('anis');
+		return result;
+	},
 };
 
 
@@ -384,9 +415,9 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
 	};
 	$scope.$on('gotAniList', function (event, params) {
 		if (AniListFactory.anis.length > 0) {
-			$scope.anis = AniListFactory.anis.map(function (ani) {
+			$scope.anis = AniONUtils.reorderAnis(AniListFactory.anis.map(function (ani) {
 				return AniONUtils.makeItem(ani, params);
-			});
+			}));
 		} else {
 			$scope.anis = [];
 		}

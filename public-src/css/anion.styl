@@ -10,6 +10,7 @@ $blue1 = #3498db
 $blue2 = #2980b9
 $black1 = #34495e
 $black2 = #2c3e50
+$sunflower = #f1c40f
 
 user-select(a)
 	user-select a
@@ -269,10 +270,13 @@ footer
 			background-color #cbf
 			font-weight bold
 			color $black2
+		&.notice, &.comingsoon
+			padding 10px 25px 10px 21px
 		&.notice
-			padding 10px 25px 10px 22px
-			border-left 3px solid $blue1
+			border-left 4px solid $blue1
 			font-weight bold
+		&.comingsoon
+			border-left 4px solid $sunflower
 	.no-result
 		text-align center
 		padding 10px 20px
@@ -297,6 +301,12 @@ footer
 
 // --- ani detail ---
 #ani-detail
+	&.notice
+		.header
+			border-top 4px solid $blue1
+	&.comingsoon
+		.header
+			border-top 4px solid $sunflower
 	hr
 		border-color #ddd
 	.loadmsg

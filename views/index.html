@@ -87,7 +87,7 @@
 		</footer>
 		<script type="text/x-template" id="T-anilist">
 			<div id="ani-list" ng-controller="AniListCtrler" ng-init="init()">
-				<a href="#/ani/{{ani.id}}" class="item" ng-class="{notice: ani.notice}" ng-repeat="ani in anis">
+				<a href="#/ani/{{ani.id}}" class="item" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}" ng-repeat="ani in anis">
 					<div class="title" ng-bind-html="ani.title | highlight:ani.query"></div>
 					<div class="info">
 						<span class="weekday" ng-if="ani.amode != 'w'">{{ani.weekday | weekday}}</span>
@@ -110,7 +110,7 @@
 			</div>
 		</script>
 		<script type="text/x-template" id="T-anidetail">
-			<div id="ani-detail" ng-controller="AniDetailCtrler">
+			<div id="ani-detail" ng-controller="AniDetailCtrler" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}">
 				<div class="loadmsg" ng-show="loading">
 					로딩중……
 				</div>
@@ -122,7 +122,7 @@
 					<div class="info">
 						<div class="text">
 							<div class="row" ng-if="ani.comingsoon">
-								<div class="label">방영예정날짜</div>
+								<div class="label"><b>방영예정날짜</b></div>
 								<div class="value">{{ani.comingsoon}}</div>
 							</div>
 							<div class="row" ng-if="ani.weekday < 7 && !ani.ended">
