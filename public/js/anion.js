@@ -107,9 +107,6 @@ var AniONUtils = {
 			anis_completed = [],
 			anis_comingsoon = [];
 		anilist.forEach(function (ani) {
-			console.group('item');
-			console.dir(ani);
-			console.groupEnd('item');
 			var t = anis;
 			if (ani.comingsoon) {
 				t = anis_comingsoon;
@@ -119,12 +116,6 @@ var AniONUtils = {
 			t.push(ani);
 		});
 		var result = anis.concat(anis_comingsoon, anis_completed);
-		//console.dir(result);
-		console.group('anis');
-		console.dir(anis);
-		console.dir(anis_completed);
-		console.dir(anis_comingsoon);
-		console.groupEnd('anis');
 		return result;
 	},
 };
