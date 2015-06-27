@@ -351,6 +351,7 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
 		}
 	});
 	$scope.showWeekday = function ($event, weekday) {
+		$location.path('/');
 		AniListFactory.getAniList(weekday, 1);
 		window.scrollTo(0, 0);
 	};
