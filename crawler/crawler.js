@@ -64,11 +64,4 @@ aniondb.seq.query('DELETE FROM ani_genres')
 		result = result.then(crawlEndedOnePage.bind(null, page));
 	}
 	return result;
-})
-.then(function () {
-	toRemove.forEach(function (id) {
-		aniondb.Ani.destroy({
-			where: {id: id}
-		});
-	});
 });
