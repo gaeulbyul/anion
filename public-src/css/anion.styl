@@ -13,409 +13,411 @@ $black2 = #2c3e50
 $sunflower = #f1c40f
 
 user-select(a)
-	user-select a
-	-moz-user-select a
-	-webkit-user-select a
+  user-select a
+  -moz-user-select a
+  -webkit-user-select a
 
 *, *:before, *:after
-	box-sizing border-box
+  box-sizing border-box
 
 body
-	overflow-x hidden
-	overflow-y scroll
-	min-width 320px
-	font-size 12pt
-	color #222
-	background-color #e2e2e2
-	margin-top 100px
+  overflow-x hidden
+  overflow-y scroll
+  min-width 320px
+  font-size 12pt
+  color #222
+  background-color #e2e2e2
+  margin-top 100px
 
 body, body *
-	font-family '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
+  font-family '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
 
 .wf-active
-	body, body *
-		font-family 'Nanum Gothic', '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
+  body, body *
+    font-family 'Nanum Gothic', '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
 
 a
-	color $blue1
-	text-decoration none
-	cursor pointer
-	img
-		border 0
+  color $blue1
+  text-decoration none
+  cursor pointer
+  img
+    border 0
 
 hr
-	border 0
-	border-top 1px
-	border-style solid
+  border 0
+  border-top 1px
+  border-style solid
 
 .ellipsis
-	white-space nowrap
-	overflow hidden
-	text-overflow ellipsis
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
 
 .hidden
-	display none
+  display none
 
 .vhidden
-	visibility hidden
+  visibility hidden
 
 ::selection
-	background-color #cdf
+  background-color #cdf
 
 ::-moz-selection
-	background-color #cdf
+  background-color #cdf
 
 .titlebar, .menuwrapper, main, footer
-	margin 0 auto
+  margin 0 auto
 
 .titlewrap
-	position fixed
-	top 0
-	left 0
-	right 0
-	user-select none
+  position fixed
+  top 0
+  left 0
+  right 0
+  user-select none
 
 .titleinwrap
-	margin 0 auto
-	max-width $app-width
-	box-shadow 0 2px 2px rgba(60, 60, 60, .3)
+  margin 0 auto
+  max-width $app-width
+  box-shadow 0 2px 2px rgba(60, 60, 60, .3)
 
 .titlebar
-	display table
-	background-color $black1
-	.title
-		display table-cell
-		width 100%
-		text-align center
-		color #fff
-		font-size 16pt
-		font-weight bold
-		a
-			color #fff
-	.button
-		display table-cell
-		border 0
-		padding 10px 20px
-		width 50px
-		color #fff
-		font-size 16pt
-		&:hover
-			background-color lighten($black1, 10%)
+  display table
+  background-color $black1
+  .title
+    display table-cell
+    width 100%
+    text-align center
+    color #fff
+    font-size 16pt
+    font-weight bold
+    a
+      color #fff
+  .button
+    display table-cell
+    border 0
+    padding 10px 20px
+    width 50px
+    color #fff
+    font-size 16pt
+    &:hover
+      background-color lighten($black1, 10%)
 
 
 main, footer
-	display block
-	max-width $app-width
-	background-color #fff
-	box-shadow 0 2px 4px 0 rgba(160, 160, 160, .8)
+  display block
+  max-width $app-width
+  background-color #fff
+  box-shadow 0 2px 4px 0 rgba(160, 160, 160, .8)
 
 footer
-	padding 5px 10px
-	margin-top 10px
-	text-align center
-	font-size 9pt
-	line-height 150%
-	color $text-color2
-	noscript.warning
-		display block
-		margin 10px
-		padding 10px
-		border 1px solid #996
-		border-radius 5px
-		background-color #ffc
-		color #663
+  padding 5px 10px
+  margin-top 10px
+  text-align center
+  font-size 9pt
+  line-height 150%
+  color $text-color2
+  noscript.warning
+    display block
+    margin 10px
+    padding 10px
+    border 1px solid #996
+    border-radius 5px
+    background-color #ffc
+    color #663
 
 #loading
-	position fixed
-	top 50%
-	left 50%
-	margin-top -50px
-	margin-left -50px
-	height 100px
-	width 100px
-	img
-		width 100px
-		height 100px
+  position fixed
+  top 50%
+  left 50%
+  margin-top -50px
+  margin-left -50px
+  height 100px
+  width 100px
+  img
+    width 100px
+    height 100px
 
 .menuwrapper
-	background-color $black2
-	.divider
-		width 90%
-		color #ccc
-	#menu
-		overflow hidden
-		hr.divider
-			width 90%
-			margin 3px auto
-			color lighten($black1, 10%)
-		.menu-item:hover
-			background-color lighten($black1, 5%)
-		.menu-main
-			.menu-item
-				display block
-				padding 7px 20px
-				font-size 12pt
-				color #fff
-				&:after
-					content '>'
-					float right
-					font-size 10pt
-		.menu-anilist-more
-			display table
-			width 90%
-			margin auto
-			.menu-item
-				display table-cell
-				width 33.333%
-				padding 7px 5px
-				text-align center
-				color #fff
-				white-space nowrap
-				&.highlight
-					border-bottom 3px solid $blue1
-					font-weight bold
-		#ani-genres-select
-			display block
-			width 90%
-			margin 5px auto
-			padding 5px
-			border 2px solid lighten($black1, 10%)
-			border-radius 3px
-			background-color $black2
-			color #fff
-		.search-outer
-			padding 3px 0
-			background-image -webkit-linear-gradient(top, $black1 0%, $black2 100%)
-			background-image linear-gradient(to bottom, $black1 0%, $black2 100%)
-		#search
-		text-align center
-			#searchform
-				width 90%
-				padding 1px
-				overflow hidden
-				margin 5px auto
-				display table
-				border 2px solid lighten($black1, 10%)
-				border-radius 3px
-				background-color $black2
-				input, button
-					padding 5px
-					color #fff
-					user-select text
-					border 0
-					background-color transparent
-				.query, .submit
-					display table-cell
-				.query
-					width 95%
-					input
-						width 100%
-						&:focus
-							outline 0
-				.submit
-					text-align right
-					width 5%
-					button
-						font-size 14pt
-						padding 0 10px
-						color #fff
+  background-color $black2
+  .divider
+    width 90%
+    color #ccc
+  #menu
+    overflow hidden
+    hr.divider
+      width 90%
+      margin 3px auto
+      color lighten($black1, 10%)
+    .menu-item:hover
+      background-color lighten($black1, 5%)
+    .menu-main
+      .menu-item
+        display block
+        padding 7px 20px
+        font-size 12pt
+        color #fff
+        &:after
+          content '>'
+          float right
+          font-size 10pt
+    .menu-anilist-more
+      display table
+      width 90%
+      margin auto
+      .menu-item
+        display table-cell
+        width 33.333%
+        padding 7px 5px
+        text-align center
+        color #fff
+        white-space nowrap
+        &.highlight
+          border-bottom 3px solid $blue1
+          font-weight bold
+    #ani-genres-select
+      display block
+      width 90%
+      margin 5px auto
+      padding 5px
+      border 2px solid lighten($black1, 10%)
+      border-radius 3px
+      background-color $black2
+      color #fff
+    .search-outer
+      padding 3px 0
+      background-image -webkit-linear-gradient(top, $black1 0%, $black2 100%)
+      background-image linear-gradient(to bottom, $black1 0%, $black2 100%)
+    #search
+    text-align center
+      #searchform
+        width 90%
+        padding 1px
+        overflow hidden
+        margin 5px auto
+        display table
+        border 2px solid lighten($black1, 10%)
+        border-radius 3px
+        background-color $black2
+        input, button
+          padding 5px
+          color #fff
+          user-select text
+          border 0
+          background-color transparent
+        .query, .submit
+          display table-cell
+        .query
+          width 95%
+          input
+            width 100%
+            &:focus
+              outline 0
+        .submit
+          text-align right
+          width 5%
+          button
+            font-size 14pt
+            padding 0 10px
+            color #fff
 
 .weekdaybar
-	display table
-	width 100%
-	a.weekday
-		display table-cell
-		text-align center
-		margin 0
-		padding 7px 5px
-		color #fff
-		border-bottom-width 3px
-		border-bottom-style solid
-		&.highlight
-			border-bottom-color $blue1
-			font-weight bold
-		&:not(.highlight)
-			border-bottom-color $black2
-		&:hover
-			background-color $black1
-			&:not(.highlight)
-				border-bottom-color $black1
+  display table
+  width 100%
+  a.weekday
+    display table-cell
+    text-align center
+    margin 0
+    padding 7px 5px
+    color #fff
+    border-bottom-width 3px
+    border-bottom-style solid
+    &.highlight
+      border-bottom-color $blue1
+      font-weight bold
+    &:not(.highlight)
+      border-bottom-color $black2
+    &:hover
+      background-color $black1
+      &:not(.highlight)
+        border-bottom-color $black1
 
 #ani-list
-	width 100%
-	.item
-		display block
-		padding 10px 25px
-		background-color #fff
-		&:hover
-			background-color #f6f6f6
-		.title
-			@extend .ellipsis
-			font-size medium
-			line-height 150%
-			color $text-color1
-		.info
-			font-size 9pt
-			line-height 150%
-			color $text-color2
-			.state
-				font-weight bold
-				color $green2
-			.weekday
-				display inline-block
-				border 1px solid #ccc
-				border-radius 3px
-				padding 0 5px
-		.match
-			background-color #cbf
-			font-weight bold
-			color $black2
-		&.notice, &.comingsoon
-			padding 10px 25px 10px 21px
-		&.notice
-			border-left 4px solid $blue1
-			font-weight bold
-		&.comingsoon
-			border-left 4px solid $sunflower
-	.no-result
-		text-align center
-		padding 10px 20px
-		color $text-color1
+  width 100%
+  .item
+    display block
+    padding 10px 25px
+    background-color #fff
+    &:hover
+      background-color #f6f6f6
+    .title
+      @extend .ellipsis
+      font-size medium
+      line-height 150%
+      color $text-color1
+    .info
+      font-size 9pt
+      line-height 150%
+      color $text-color2
+      .state
+        font-weight bold
+        color $green2
+      .weekday
+        display inline-block
+        border 1px solid #ccc
+        border-radius 3px
+        padding 0 5px
+    .match
+      background-color #cbf
+      font-weight bold
+      color $black2
+    &.notice, &.comingsoon
+      padding 10px 25px 10px 21px
+    &.notice
+      border-left 4px solid $blue1
+      font-weight bold
+    &.comingsoon
+      border-left 4px solid $sunflower
+  .no-result
+    text-align center
+    padding 10px 20px
+    color $text-color1
 
 
 #pages
-	padding 0 10px
-	text-align center
-	.page
-		display inline-block
-		padding 5px 10px
-		margin 5px
-		border 1px solid #ddd
-		color $text-color1
-		&.highlight
-			font-weight bold
-		&:hover
-			background-color #f6f6f6
-	&:empty
-		display none
+  padding 0 10px
+  text-align center
+  .page
+    display inline-block
+    padding 5px 10px
+    margin 5px
+    border 1px solid #ddd
+    color $text-color1
+    &.highlight
+      font-weight bold
+    &:hover
+      background-color #f6f6f6
+  &:empty
+    display none
 
 // --- ani detail ---
 #ani-detail
-	&.notice
-		.header
-			border-top 4px solid $blue1
-	&.comingsoon
-		.header
-			border-top 4px solid $sunflower
-	hr
-		border-color #ddd
-	.loadmsg
-		padding 10px
-		text-align center
-		font-size 12pt
-	.header
-		padding 10px 0
-		.title
-			margin 10px 20px
-			.text
-				font-size 18pt
-				font-weight bold
-				color $text-color1
-			.state
-				margin 5px
-				font-size 12pt
-				color $text-color2
-		.info
-			display table
-			width 100%
-			padding 0 20px
-			.text, .imagecell
-				display table-cell
-			.text
-				width 80%
-				font-size 12pt
-				color $text-color2
-				.row
-					border-top 1px solid #eee
-					padding 10px 0
-					.label
-						font-size 10pt
-						float left
-					.value
-						text-align right
-					&:first-of-type
-						border-top 0
-			.imagecell
-				.image
-					vertical-align top
-					margin-left 20px
-					padding 5px
-					outline 1px solid #ccc
-			@media screen and (max-width 500px)
-				.text, .imagecell
-					display block
-					width 100%
-				.imagecell
-					text-align center
-				.image
-					margin-left 0
-	.content
-		margin 5px 20px
-		padding 10px 0
-		.notfound, .caps-loading
-			padding 10px
-			text-align center
-			font-size 10pt
-		.group-name
-			padding 5px 0 3px
-			border-bottom 2px solid #eee
-			color $text-color2
-			font-size 10pt
-		.captions
-			display table
-			border-collapse collapse
-			width 100%
-			.caption
-				display table-row
-				line-height 150%
-				.episode, .name, .updateat
-					display table-cell
-				.episode, .name
-					padding 10px 5px
-					color $text-color1
-				.episode
-					width 60px
-					text-align right
-				.updateat
-					text-align right
-					font-size 10pt
-					color $text-color2
-					padding-right 5px
-				&:hover
-					background-color #f6f6f6
-				&.no-url
-					cursor not-allowed
-					.episode, .name
-						text-decoration line-through
-						color lighten($text-color2, 5%)
-		.links
-			.link
-				display block
-				padding 10px
-				border-top 1px solid #eee
-				color $text-color1
-				&:after
-					content '>'
-					float right
-					font-size 10pt
-					color $text-color2
-				&:first-of-type
-					border-top 0
-		.share
-			padding 20px
+  &.notice
+    .header
+      border-top 4px solid $blue1
+  &.comingsoon
+    .header
+      border-top 4px solid $sunflower
+  hr
+    border-color #ddd
+  .loadmsg
+    padding 10px
+    text-align center
+    font-size 12pt
+  .header
+    padding 10px 0
+    .title
+      margin 10px 20px
+      .text
+        font-size 18pt
+        font-weight bold
+        color $text-color1
+      .state
+        margin 5px
+        font-size 12pt
+        color $text-color2
+    .info
+      display table
+      width 100%
+      padding 0 20px
+      .text, .imagecell
+        display table-cell
+      .text
+        width 80%
+        font-size 12pt
+        color $text-color2
+        .row
+          border-top 1px solid #eee
+          padding 10px 0
+          .label
+            font-size 10pt
+            float left
+          .value
+            text-align right
+          &:first-of-type
+            border-top 0
+      .favicon
+        vertical-align middle
+      .imagecell
+        .image
+          vertical-align top
+          margin-left 20px
+          padding 5px
+          outline 1px solid #ccc
+      @media screen and (max-width 500px)
+        .text, .imagecell
+          display block
+          width 100%
+        .imagecell
+          text-align center
+        .image
+          margin-left 0
+  .content
+    margin 5px 20px
+    padding 10px 0
+    .notfound, .caps-loading
+      padding 10px
+      text-align center
+      font-size 10pt
+    .group-name
+      padding 5px 0 3px
+      border-bottom 2px solid #eee
+      color $text-color2
+      font-size 10pt
+    .captions
+      display table
+      border-collapse collapse
+      width 100%
+      .caption
+        display table-row
+        line-height 150%
+        .episode, .name, .updateat
+          display table-cell
+        .episode, .name
+          padding 10px 5px
+          color $text-color1
+        .episode
+          width 60px
+          text-align right
+        .updateat
+          text-align right
+          font-size 10pt
+          color $text-color2
+          padding-right 5px
+        &:hover
+          background-color #f6f6f6
+        &.no-url
+          cursor not-allowed
+          .episode, .name
+            text-decoration line-through
+            color lighten($text-color2, 5%)
+    .links
+      .link
+        display block
+        padding 10px
+        border-top 1px solid #eee
+        color $text-color1
+        &:after
+          content '>'
+          float right
+          font-size 10pt
+          color $text-color2
+        &:first-of-type
+          border-top 0
+    .share
+      padding 20px
 .bottom-notice
-	border-top 1px dashed #ccc
-	border-bottom 1px dashed #ccc
-	margin 5px 20px
-	padding 10px 0
-	font-size 10pt
+  border-top 1px dashed #ccc
+  border-bottom 1px dashed #ccc
+  margin 5px 20px
+  padding 10px 0
+  font-size 10pt
