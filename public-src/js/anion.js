@@ -149,11 +149,11 @@ angular.module('AniONFilters', []).filter({
       return '장르 불명';
     }
   }},
-  highlight: function($sce) {return function (input, word) {
+  highlight: ['$sce', function($sce) {return function (input, word) {
     if (!word) return $sce.trustAsHtml(input);
     var patt = new RegExp('('+AniONUtils.escapeRegexp(word)+')', 'gi');
     return $sce.trustAsHtml(input.replace(patt, '<span class="match">$1</span>'));
-  }},
+  }}],
   urlhost: function() {return function (input) {
     var a = document.createElement('a');
     a.href = input;
@@ -167,27 +167,27 @@ var AniON = angular.module('AniON', [
   'MainCtrlers',
 ]);
 
-AniON.config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        template: document.getElementById('T-anilist').innerHTML,
-        controller: 'AniListCtrler',
-      })
-      .when('/ani/:id', {
-        template: document.getElementById('T-anidetail').innerHTML,
-        controller: 'AniDetailCtrler',
-      })
-      .otherwise({
-        redirectTo: '/',
-      });
-  }).run(function ($location, AniListFactory) {
-    var path = $location.path();
-    if (path === '' || path == '/') {
-      AniListFactory.getTodayAniList();
-    }
-  });
+AniON.config(['$routeProvider', function ($routeProvider) {
+  $routeProvider
+    .when('/', {
+      template: document.getElementById('T-anilist').innerHTML,
+      controller: 'AniListCtrler',
+    })
+    .when('/ani/:id', {
+      template: document.getElementById('T-anidetail').innerHTML,
+      controller: 'AniDetailCtrler',
+    })
+    .otherwise({
+      redirectTo: '/',
+    });
+}]).run(['$location', 'AniListFactory', function ($location, AniListFactory) {
+  var path = $location.path();
+  if (path === '' || path == '/') {
+    AniListFactory.getTodayAniList();
+  }
+}]);
 
-AniON.factory('AniListFactory', function($rootScope, $http) {
+AniON.factory('AniListFactory', ['$rootScope', '$http', function($rootScope, $http) {
   var current_weekday;
   var current_query;
   var current_genre;
@@ -280,9 +280,9 @@ AniON.factory('AniListFactory', function($rootScope, $http) {
         });
     },
   };
-});
+}]);
 
-AniON.factory('AniDetailFactory', function ($rootScope, $http) {
+AniON.factory('AniDetailFactory', ['$rootScope', '$http', function ($rootScope, $http) {
   return {
     ani: [],
     getAniDetail: function (id) {
@@ -301,9 +301,9 @@ AniON.factory('AniDetailFactory', function ($rootScope, $http) {
       $rootScope.$broadcast('gotAniDetail', ani);
     },
   };
-});
+}]);
 
-AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
+AniON.factory('AniCaptionFactory', ['$rootScope', '$http', function ($rootScope, $http) {
   return {
     caps: [],
     getCaptions: function (id) {
@@ -318,9 +318,9 @@ AniON.factory('AniCaptionFactory', function ($rootScope, $http) {
       $rootScope.$broadcast('gotAniCaptions');
     },
   };
-});
+}]);
 
-AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniListFactory) {
+AniON.controller('TitlebarCtrler', ['$scope', '$location', '$window', 'AniListFactory', function ($scope, $location, $window, AniListFactory) {
   //http://stackoverflow.com/q/12618342
   $scope.formdata = {};
   $scope.menuVisible = false;
@@ -370,9 +370,9 @@ AniON.controller('TitlebarCtrler', function ($scope, $location, $window, AniList
       AniListFactory.getTodayAniList();
     }
   };
-});
+}]);
 
-AniON.controller('MainViewCtrler', function ($scope, $rootScope) {
+AniON.controller('MainViewCtrler', ['$scope', '$rootScope', function ($scope, $rootScope) {
   $scope.loading = true;
   $scope.currentWeekday = null;
   $scope.$on('beforeAniList', function (event) {
@@ -397,11 +397,11 @@ AniON.controller('MainViewCtrler', function ($scope, $rootScope) {
     $scope.loading = false;
     $rootScope.title = ani.title + ' – Ani-ON';
   });
-});
+}]);
 
 var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters']);
 
-MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
+MainCtrlers.controller('AniListCtrler', ['$scope', 'AniListFactory', function ($scope, AniListFactory) {
   $scope.init = function () {
     AniListFactory.getRecentAniList();
   };
@@ -427,9 +427,9 @@ MainCtrlers.controller('AniListCtrler', function ($scope, AniListFactory) {
       AniListFactory.getAniList(weekday > 0 ? weekday - 1 : 6);
     }
   };
-});
+}]);
 
-MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
+MainCtrlers.controller('AniListPageCtrler', ['$scope', 'AniListFactory', function ($scope, AniListFactory) {
   $scope.init = function () {
     AniListFactory.getRecentAniList();
   };
@@ -458,11 +458,11 @@ MainCtrlers.controller('AniListPageCtrler', function ($scope, AniListFactory) {
     AniListFactory[methodname](-1, page);
     window.scrollTo(0, 0);
   };
-});
+}]);
 
 MainCtrlers.controller('AniDetailCtrler',
-  function ($scope, $routeParams, $window, AniDetailFactory, AniCaptionFactory)
-{
+  ['$scope', '$routeParams', '$window', 'AniDetailFactory', 'AniCaptionFactory',
+  function ($scope, $routeParams, $window, AniDetailFactory, AniCaptionFactory) {
   $scope.ani = {};
   $scope.caps = [];
   $scope.caps_loading = true;
@@ -491,4 +491,4 @@ MainCtrlers.controller('AniDetailCtrler',
     $scope.caps_loading = false;
     $scope.caps = AniCaptionFactory.caps;
   });
-});
+}]);

@@ -3,11 +3,13 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+        //mangle: false,
+        screwIE8: true,
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
       },
       dist: {
         files: {
-          'public/js/<%= pkg.name %>.min.js': ['public/js/<%= pkg.name %>.js'],
+          'public/js/anion.min.js': ['public-src/js/anion.js'],
         },
       },
     },
@@ -15,7 +17,7 @@ module.exports = function (grunt) {
       compile: {
         options: {
           compress: true,
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
         },
       },
       dist: {
@@ -32,14 +34,20 @@ module.exports = function (grunt) {
           spawn: false,
         },
       },
+      scripts: {
+        files: ['public-src/js/*.js'],
+        tasks: ['uglify'],
+        options: {
+          spawn: false,
+        },
+      },
     },
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-stylus');
-  // grunt.registerTask('default', ['uglify', 'stylus']);
-  grunt.registerTask('default', ['stylus']);
+  grunt.registerTask('default', ['uglify', 'stylus']);
 
 };
 
