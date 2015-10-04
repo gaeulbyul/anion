@@ -157,7 +157,12 @@ angular.module('AniONFilters', []).filter({
   urlhost: function() {return function (input) {
     var a = document.createElement('a');
     a.href = input;
-    return a.hostname;
+    var host = a.hostname;
+    if (host.length > 25) {
+      host = host.substr(0, 25);
+      host += '…';
+    }
+    return host;
   }},
 });
 
