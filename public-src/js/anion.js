@@ -57,6 +57,7 @@ var AniONUtils = {
       id: ani.id,
       weekday: ani.weekday,
       title: ani.title,
+      title2: ani.title,
       genre: ani.genre,
       time: ani.time,
       ended: ani.ended,
@@ -96,6 +97,13 @@ var AniONUtils = {
       }
     }
     item.notice = /anissia\.net/.test(ani.homepage);
+    var title2 = ani.title;
+    var word_blacklist = '극장판,OVA,OAD,미방영화,()';
+    title2 = title2.replace(/제?\d+기/, '');
+    word_blacklist.split(',').forEach(function (w) {
+      title2 = title2.replace(w, '');
+    });
+    item.title2 = title2.trim();
     return item;
   },
   escapeRegexp: function escapeRegexp (t) {
