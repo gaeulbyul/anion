@@ -359,6 +359,7 @@ AniON.controller('TitlebarCtrler', ['$scope', '$location', '$window', 'AniListFa
     $location.path('/');
     AniListFactory.searchAniList($scope.formdata.query);
     window.scrollTo(0, 0);
+    document.activeElement.blur()
   };
   $scope.showByGenres = function () {
     document.activeElement.blur();
