@@ -248,6 +248,8 @@ footer
     display block
     padding 10px 25px
     background-color #fff
+    &:not(:first-of-type)
+      border-top 1px solid #eee
     &:hover
       background-color #f6f6f6
     .title
@@ -337,15 +339,14 @@ footer
         font-size 12pt
         color $text-color2
         .row
-          border-top 1px solid #eee
           padding 10px 0
+          &:not(:first-of-type)
+            border-top 1px solid #eee
           .label
             font-size 10pt
             float left
           .value
             text-align right
-          &:first-of-type
-            border-top 0
       .favicon
         vertical-align middle
       .imagecell
@@ -383,6 +384,8 @@ footer
         line-height 150%
         .episode, .name, .updateat
           display table-cell
+          &:not(:first-of-type)
+            border-top 1px solid #eee
         .episode, .name
           padding 10px 5px
           color $text-color1
@@ -405,8 +408,9 @@ footer
       .link
         display block
         padding 15px 5px
-        border-top 1px solid #eee
         color $text-color1
+        &:not(:first-of-type)
+          border-top 1px solid #eee
         &:hover
           background-color #f6f6f6
         &:after
@@ -414,8 +418,6 @@ footer
           float right
           font-size 10pt
           color $text-color2
-        &:first-of-type
-          border-top 0
     .share
       padding 20px
 .bottom-notice
