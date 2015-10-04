@@ -9,7 +9,7 @@
     "url": "git://github.com/zn/anion"
   },
   "description": "Anime Timetable from Anissia",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "scripts": {
     "start": "node ./bin/www.js",
     "buildAsset": "grunt"
