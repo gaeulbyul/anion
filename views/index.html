@@ -91,16 +91,16 @@
         <a href="#/ani/{{ani.id}}" class="item" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}" ng-repeat="ani in anis">
           <div class="title" ng-bind-html="ani.title | matchQuery:ani.query | escapeHtml | highlight"></div>
           <div class="info">
-            <span class="weekday" ng-if="ani.amode != 'w'">{{ani.weekday | weekday}}</span>
+            <span class="weekday" ng-if="ani.amode !== 'w'">{{ani.weekday | weekday}}</span>
             <span class="time" ng-if="ani.weekday < 7 && !ani.ended">{{ani.time | time4}}</span>
-            <span class="time" ng-if="(ani.weekday == 7 || ani.weekday == 8) && !ani.ended">{{ani.startdate | date8_2}}</span>
+            <span class="time" ng-if="(ani.weekday === 7 || ani.weekday === 8) && !ani.ended">{{ani.startdate | date8_2}}</span>
             <span class="time" ng-if="ani.ended">{{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
             <br>
             <span class="state" ng-if="ani.state">{{ani.state}}</span>
             <span class="genre" ng-bind-html="ani.genre | genre | matchQuery:ani.genre_query | escapeHtml | highlight"></span>
           </div>
         </a>
-        <div class="no-result" ng-show="anis.length == 0">
+        <div class="no-result" ng-show="anis.length === 0">
           검색결과가 없습니다.
         </div>
         <div id="pages" ng-controller="AniListPageCtrler" ng-init="init()">
@@ -173,7 +173,7 @@
                   로딩중……
                 </div>
               </div>
-              <div ng-if="!caps_loading && caps.length == 0">
+              <div ng-if="!caps_loading && caps.length === 0">
                 <div class="notfound">
                   자막제작자를 찾을 수 없습니다.
                 </div>

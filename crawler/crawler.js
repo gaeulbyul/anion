@@ -11,15 +11,15 @@ var aniondb = new AniONDB(config.database);
 var toRemove = [];
 
 function callback (db) {
-  return function (newlist, dblist) {
+  return function(newlist, dblist) {
     var dblist_ids = _.pluck(dblist, 'id');
-    newlist.forEach(function (ani) {
+    newlist.forEach(function(ani) {
       var genres = ani.genres.slice(0); // copy array;
       ani.genre = ani.genres.join();
       delete ani.genres;
       dblist_ids = _.without(dblist_ids, ani.id);
-      db.Ani.upsert(ani).then(function () {
-        genres.forEach(function (genre) {
+      db.Ani.upsert(ani).then(function() {
+        genres.forEach(function(genre) {
           aniondb.Genre.create({
             ani_id: ani.id,
             genre: genre
@@ -27,14 +27,14 @@ function callback (db) {
         });
       });
     });
-    dblist_ids.forEach(function (id) {
-      toRemove.push(id)
+    dblist_ids.forEach(function(id) {
+      toRemove.push(id);
     });
   };
 }
 
 aniondb.seq.query('DELETE FROM ani_genres')
-.then(function () {
+.then(function() {
   function crawlOneWeekday (weekday) {
     return Q.all([
       Anissia.getAnilist(weekday),
@@ -50,7 +50,7 @@ aniondb.seq.query('DELETE FROM ani_genres')
   }
   return result;
 })
-.then(function () {
+.then(function() {
   function crawlEndedOnePage (page) {
     return Q.all([
       Anissia.getEndedAnilist(page),

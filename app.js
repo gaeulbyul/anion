@@ -22,7 +22,7 @@ var aniondb = new AniONDB(config.database);
 
 var route = express.Router();
 
-route.get('/', function showIndex(req, res){
+route.get('/', function(req, res){
   res.status(200).sendFile('index.html', {
     root: __dirname + '/views',
   });
@@ -76,7 +76,7 @@ route.get('/api/anilist', function(req, res, next) {
 route.get('/api/genres', function(req, res, next) {
   aniondb.seq.query('SELECT DISTINCT "genre" FROM "ani_genres"', {
     type: AniONDB.Sequelize.QueryTypes.SELECT
-  }).then(function (genres) {
+  }).then(function(genres) {
     return res.status(200).json(_.pluck(genres, 'genre'));
   });
 });
@@ -88,9 +88,9 @@ route.get('/api/ani', function(req, res, next) {
   }
   aniondb.Ani.find({
     where: { id: aniID }
-  }).then(function (ani) {
+  }).then(function(ani) {
     return res.status(200).json(ani);
-  }, function (err) {
+  }, function(err) {
     return res.status(500);
   });
 });
@@ -98,17 +98,16 @@ route.get('/api/ani', function(req, res, next) {
 route.get('/api/cap', function(req, res, next) {
   var aniID = req.query.id;
   Anissia.getAniCaptions(aniID)
-    .then(function (ani) {
+    .then(function(ani) {
       return res.status(200).json(ani);
-    })
-  ;;
+    });
 });
 
 app.use(route);
 
-app.use(function errorHandler(err, req, res, next) {
+app.use(function(err, req, res, next) {
   var resp;
-  if (app.get('env') == 'development') {
+  if (app.get('env') === 'development') {
     resp = {
       error: err,
       message: err.message
