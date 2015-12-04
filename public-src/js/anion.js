@@ -157,11 +157,16 @@ angular.module('AniONFilters', []).filter({
       return '장르 불명';
     }
   }},
-  highlight: ['$sce', function($sce) {return function (input, word) {
-    if (!word) return $sce.trustAsHtml(input);
-    var patt = new RegExp('('+AniONUtils.escapeRegexp(word)+')', 'gi');
-    return $sce.trustAsHtml(input.replace(patt, '<span class="match">$1</span>'));
+  highlight: ['$sce', function($sce) {return function (input) {
+    return $sce.trustAsHtml(input.replace(/``(.+)``/, '<span class="match">$1</span>'));
   }}],
+  matchQuery: function() {return function (input, word) {
+    if (!word) {
+      return input;
+    }
+    var patt = new RegExp('('+AniONUtils.escapeRegexp(word)+')', 'gi');
+    return input.replace(patt, '``$1``');
+  }},
   urlhost: function() {return function (input) {
     var a = document.createElement('a');
     a.href = input;
@@ -172,6 +177,21 @@ angular.module('AniONFilters', []).filter({
     }
     return host;
   }},
+  escapeHtml: function () {
+    var entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '/': '&#x2F;',
+    };
+    return function (input) {
+      return String(input).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+      });
+    };
+  },
 });
 
 var AniON = angular.module('AniON', [
