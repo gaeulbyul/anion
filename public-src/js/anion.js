@@ -174,7 +174,7 @@ angular.module('AniONFilters', []).filter({
   },
   highlight: ['$sce', function($sce) {
     return function(input) {
-      return $sce.trustAsHtml(input.replace(/``(.+)``/, '<span class="match">$1</span>'));
+      return $sce.trustAsHtml(input.replace(/``(.+?)``/g, '<span class="match">$1</span>'));
     };
   }],
   matchQuery: function() {
