@@ -4,20 +4,15 @@ var Anissia = require('../lib/anissia');
 var AniONDB = require('../model/aniondb');
 var config = require('../config');
 var Q = require('q');
-var _ = require('underscore');
 
 var aniondb = new AniONDB(config.database);
 
-var toRemove = [];
-
 function callback (db) {
   return function(newlist, dblist) {
-    var dblist_ids = _.pluck(dblist, 'id');
     newlist.forEach(function(ani) {
       var genres = ani.genres.slice(0); // copy array;
       ani.genre = ani.genres.join();
       delete ani.genres;
-      dblist_ids = _.without(dblist_ids, ani.id);
       db.Ani.upsert(ani).then(function() {
         genres.forEach(function(genre) {
           aniondb.Genre.create({
@@ -26,9 +21,6 @@ function callback (db) {
           });
         });
       });
-    });
-    dblist_ids.forEach(function(id) {
-      toRemove.push(id);
     });
   };
 }
