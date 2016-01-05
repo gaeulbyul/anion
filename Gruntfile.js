@@ -1,11 +1,8 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
     uglify: {
       options: {
-        //mangle: false,
         screwIE8: true,
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
       },
       dist: {
         files: {
@@ -17,7 +14,6 @@ module.exports = function(grunt) {
       compile: {
         options: {
           compress: true,
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
         },
       },
       dist: {
@@ -48,6 +44,4 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.registerTask('default', ['uglify', 'stylus']);
-
 };
-
