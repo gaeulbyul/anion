@@ -74,7 +74,7 @@
     </div>
     <main id="main" ng-controller="MainViewCtrler">
       <div id="loading" ng-show="loading">
-        <img src="img/puff.svg">
+        <div class="loader"></div>
       </div>
       <ng-view ng-swipe-left="swipeLeft($event)" ng-swipe-right="swipeRight($event)"></ng-view>
     </main>
