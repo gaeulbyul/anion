@@ -9,7 +9,7 @@ function AniONDB (dbconfig) {
     },
   });
   this.seq.authenticate()
-    .catch(function(err) {
+    .catch(function (err) {
       console.error('Error on connection db: %s', err);
     });
   this.Ani = this.seq.define('Ani', {
@@ -75,7 +75,7 @@ function AniONDB (dbconfig) {
     createdAt: false,
     updatedAt: false,
   });
-};
+}
 
 AniONDB.Sequelize = Sequelize;
 

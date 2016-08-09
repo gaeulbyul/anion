@@ -19,6 +19,7 @@
     "node": "~4.1.x"
   },
   "devDependencies": {
+    "eslint": "^3.2.2",
     "grunt": "^1.0",
     "grunt-contrib-concat": "^1.0",
     "grunt-contrib-stylus": "^1.2",

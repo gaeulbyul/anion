@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.initConfig({
     uglify: {
       options: {
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         files: {
           'public/css/anion.css': 'public-src/css/anion.styl',
         },
-      }
+      },
     },
     watch: {
       styluses: {
