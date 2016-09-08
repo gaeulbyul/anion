@@ -145,7 +145,7 @@
                 <div class="label">홈페이지</div>
                 <div class="value" ng-if="ani.homepage">
                   <a href="{{ani.homepage}}" title="{{ani.homepage}}" target="_blank">
-                    <img class="favicon" src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
+                    <img class="favicon" ng-src="//www.google.com/s2/favicons?domain={{ani.homepage}}">
                     {{ani.homepage | urlhost}}
                   </a>
                 </div>
