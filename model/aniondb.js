@@ -2,7 +2,6 @@ var Sequelize = require('sequelize');
 
 function AniONDB (dbconfig) {
   this.seq = new Sequelize(dbconfig.url, {
-    dialect: 'postgres',
     omitNull: true, // http://stackoverflow.com/a/14333057
     dialectOptions: {
       ssl: !!dbconfig.ssl, // http://stackoverflow.com/a/27688357
