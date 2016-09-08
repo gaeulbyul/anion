@@ -23,16 +23,17 @@
     "grunt": "^1.0",
     "grunt-contrib-concat": "^1.0",
     "grunt-contrib-stylus": "^1.2",
-    "grunt-contrib-uglify": "^1.0",
+    "grunt-contrib-uglify": "^2.0",
     "grunt-contrib-watch": "^1.0"
   },
   "dependencies": {
-    "express": "~4.13",
+    "express": "^4.13",
     "morgan": "^1.1",
-    "pg": "^4.2.0",
+    "pg": "^6.0",
     "pg-hstore": "^2.3.1",
     "q": "^1.2.0",
-    "request-promise": "^2.0",
+    "request": "^2.74.0",
+    "request-promise": "^4.1",
     "sequelize": "^3.21",
     "underscore": "^1.8"
   }
