@@ -21,17 +21,15 @@ var aniondb = new AniONDB(config.database);
 
 // anion.herokuapp.com에선 HTTPS 버전으로 리다이렉트
 // http://stackoverflow.com/a/23894573
-app.configure(function () {
-  if (app.get('env') === 'production') {
-    app.use(function (req, res, next) {
-      var hostname = req.get('Host');
-      if (req.headers['x-forwarded-proto'] !== 'https' && hostname === 'anion.herokuapp.com') {
-        return res.redirect(301, ['https://', hostname, req.url].join(''));
-      }
-      return next();
-    });
-  }
-});
+if (app.get('env') === 'production') {
+  app.use(function (req, res, next) {
+    var hostname = req.get('Host');
+    if (req.headers['x-forwarded-proto'] !== 'https' && hostname === 'anion.herokuapp.com') {
+      return res.redirect(301, ['https://', hostname, req.url].join(''));
+    }
+    return next();
+  });
+}
 
 var route = express.Router();
 
