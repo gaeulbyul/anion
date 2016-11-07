@@ -152,6 +152,12 @@ angular.module('AniONFilters', []).filter({
   date8_2: function () {
     return AniONUtils.formatDate2;
   },
+  startdate: function () {
+    return function (input) {
+      var startdate = AniONUtils.parseDate2(input);
+      return startdate.format('YYYY년 MM월') + ' 방영';
+    };
+  },
   datetime14: function (){
     return function (input) {
       var m = moment(input, 'YYYYMMDDHHmmss');
@@ -229,6 +235,12 @@ AniON.config(['$routeProvider', function ($routeProvider) {
     .when('/ani/:id', {
       template: document.getElementById('T-anidetail').innerHTML,
       controller: 'AniDetailCtrler',
+      resolve: {
+        aniDetail: ['$route', 'AniDetailFactory', function ($route, AniDetailFactory) {
+          var id = $route.current.params.id;
+          return AniDetailFactory.getAniDetail(id);
+        }],
+      },
     })
     .otherwise({
       redirectTo: '/',
@@ -336,38 +348,33 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
 
 AniON.factory('AniDetailFactory', ['$rootScope', '$http', function ($rootScope, $http) {
   return {
-    ani: [],
     getAniDetail: function (id) {
-      var self = this;
       $rootScope.$broadcast('beforeAniDetail');
-      return $http.get('api/ani/?id=' + id)
-        .success(function (r){
-          self.ani = r;
-          self.broadcastAniDetail(r);
-        })
-        .error(function (r) {
-          // console.error(r);
-        });
-    },
-    broadcastAniDetail: function (ani) {
-      $rootScope.$broadcast('gotAniDetail', ani);
+      // return $http.get('api/ani/?id=' + id);
+      return $http({
+        method: 'GET',
+        url: 'api/ani',
+        params: { id: id },
+        cache: true,
+      }).success(function (resp) {
+        $rootScope.$broadcast('gotAniDetail', resp);
+        return resp;
+      });
     },
   };
 }]);
 
-AniON.factory('AniCaptionFactory', ['$rootScope', '$http', function ($rootScope, $http) {
+AniON.factory('AniCaptionFactory', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+  var cache = {};
   return {
-    caps: [],
     getCaptions: function (id) {
-      var self = this;
-      return $http.get('api/cap/?id=' + id)
-        .success(function (r){
-          self.caps = r;
-          self.broadcastAniCaptions();
-        });
-    },
-    broadcastAniCaptions: function () {
-      $rootScope.$broadcast('gotAniCaptions');
+      // return $http.get('api/cap/?id=' + id);
+      return $http({
+        method: 'GET',
+        url: 'api/cap',
+        params: { id: id },
+        cache: true,
+      });
     },
   };
 }]);
@@ -378,8 +385,14 @@ AniON.controller('TitlebarCtrler', ['$scope', '$location', '$window', 'AniListFa
   $scope.menuVisible = false;
   $scope.currentWeekday = null;
   $scope.aniGenres = [];
+  $scope.goBack = function ($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $window.history.back();
+  };
   $scope.toggleMenu = function ($event) {
     $event.preventDefault();
+    $event.stopPropagation();
     $scope.menuVisible = !$scope.menuVisible;
     if ($scope.aniGenres.length === 0) {
       AniListFactory.getAniGenres();
@@ -513,35 +526,66 @@ MainCtrlers.controller('AniListPageCtrler', ['$scope', 'AniListFactory', functio
   };
 }]);
 
-MainCtrlers.controller('AniDetailCtrler',
-  ['$scope', '$routeParams', '$window', 'AniDetailFactory', 'AniCaptionFactory',
-  function ($scope, $routeParams, $window, AniDetailFactory, AniCaptionFactory) {
-    $scope.ani = {};
-    $scope.caps = [];
-    $scope.caps_loading = true;
-    $scope.checklink = function ($event, url) {
-      $event.preventDefault();
-      if (url) {
-        $window.open(url, '_blank');
-      } else {
-        alert('주소가 등록되어있지 않습니다.');
+MainCtrlers.directive('aniItem', ['AniCaptionFactory', function (AniCaptionFactory) {
+  return {
+    restrict: 'E',
+    scope: true,
+    controller: ['$scope', function ($scope) {
+      $scope.expanded = false;
+      $scope.expand = function ($event, ani) {
+        $event.preventDefault();
+        $scope.expanded = !$scope.expanded;
+      };
+    }],
+    template: document.getElementById('T-aniitem').innerHTML,
+  };
+}]);
+
+MainCtrlers.directive('capList', ['$window', 'AniCaptionFactory', function ($window, AniCaptionFactory) {
+  return {
+    restrict: 'E',
+    scope: {
+      aniID: '=aniid',
+    },
+    controller: ['$scope', function ($scope) {
+      $scope.caps = [];
+      $scope.caps_loading = true;
+      if ($scope.aniID) {
+        AniCaptionFactory.getCaptions($scope.aniID)
+          .success(function (caps) {
+            $scope.caps_loading = false;
+            $scope.caps = caps;
+          });
       }
-    };
-    $scope.$on('$routeChangeSuccess', function (event) {
-      var id = $routeParams.id;
-      AniDetailFactory.getAniDetail(id)
-      .error(function (r) {
-        alert('찾을 수 없습니다!');
-        $window.history.back();
+      $scope.checklink = function ($event, url) {
+        $event.preventDefault();
+        if (url) {
+          $window.open(url, '_blank');
+        } else {
+          alert('주소가 등록되어있지 않습니다.');
+        }
+      };
+    }],
+    template: document.getElementById('T-caplist').innerHTML,
+  };
+}]);
+
+MainCtrlers.controller('AniDetailCtrler',
+  ['$scope', '$routeParams', '$window', 'aniDetail',
+    function ($scope, $routeParams, $window, aniDetail) {
+      $scope.ani = AniONUtils.makeItem(aniDetail.data, {amode: 'd'});
+      $scope.$on('$routeChangeSuccess', function (event) {
+        document.getElementById('main').className = 'main-ani-detail';
+        $scope.loading = false;
+        /*
+        AniDetailFactory.getAniDetail(id)
+          .success(function (ani) {
+            $scope.ani = AniONUtils.makeItem(ani, {amode: 'd'});
+          })
+          .error(function (r) {
+            alert('찾을 수 없습니다!');
+            $window.history.back();
+          });
+        */
       });
-      AniCaptionFactory.getCaptions(id);
-    });
-    $scope.$on('gotAniDetail', function (event) {
-      $scope.ani = AniONUtils.makeItem(AniDetailFactory.ani, {amode: 'd'});
-      document.getElementById('main').className = 'main-ani-detail';
-    });
-    $scope.$on('gotAniCaptions', function (event) {
-      $scope.caps_loading = false;
-      $scope.caps = AniCaptionFactory.caps;
-    });
-  }]);
+    }]);

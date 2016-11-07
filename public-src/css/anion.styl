@@ -1,7 +1,7 @@
 // http://www.google.com/fonts/earlyaccess
 // @import url('//fonts.googleapis.com/earlyaccess/nanumgothic.css');
 
-$app-width = 480px
+$app-width = 500px
 $text-color1 = #222
 $text-color2 = #666
 $text-color3 = #f6f6f6
@@ -17,6 +17,10 @@ user-select(a)
   -moz-user-select a
   -webkit-user-select a
 
+light-shadow()
+  background-color #fff
+  box-shadow 0 2px 4px 0 rgba(160, 160, 160, .8)
+
 *, *:before, *:after
   box-sizing border-box
 
@@ -27,7 +31,7 @@ body
   font-size 12pt
   color #222
   background-color #e2e2e2
-  margin-top 100px
+  margin-top 80px
 
 body, body *
   font-family '나눔고딕', 'nanumgothic', '맑은 고딕', 'malgun gothic', sans-serif
@@ -79,6 +83,7 @@ hr
 .titlebar
   display table
   background-color $black1
+  cursor pointer
   .title
     display table-cell
     width 100%
@@ -95,23 +100,23 @@ hr
     width 50px
     color #fff
     font-size 16pt
-    &:hover
-      background-color lighten($black1, 10%)
+  &:hover
+    background-color lighten($black1, 5%)
 
 
 main, footer
   display block
   max-width $app-width
-  background-color #fff
-  box-shadow 0 2px 4px 0 rgba(160, 160, 160, .8)
 
 footer
   padding 10px
   margin-top 10px
+  margin-bottom 10px
   text-align center
   font-size 9pt
   line-height 150%
   color $text-color2
+  light-shadow()
   noscript.warning
     display block
     margin 10px
@@ -242,49 +247,73 @@ footer
   width 100%
   .item
     display block
-    padding 10px 25px
-    background-color #fff
+    light-shadow()
+    transition .3s margin ease
     &:not(:first-of-type)
       border-top 1px solid #eee
-    &:hover
-      background-color #f6f6f6
-    .title
-      @extend .ellipsis
-      font-size medium
-      line-height 150%
-      color $text-color1
-    .info
-      font-size 9pt
-      line-height 150%
-      color $text-color2
-      .state
+    .basic
+      display block
+      padding 10px 25px
+      .title
+        @extend .ellipsis
+        font-size medium
+        line-height 150%
+        color $text-color1
+      .info
+        font-size 9pt
+        line-height 150%
+        color $text-color2
+        .state
+          font-weight bold
+          color $green2
+        .weekday
+          display inline-block
+          border 1px solid #ccc
+          border-radius 3px
+          padding 0 5px
+      .match
+        background-color #cbf
         font-weight bold
-        color $green2
-      .weekday
-        display inline-block
-        border 1px solid #ccc
-        border-radius 3px
-        padding 0 5px
-    .match
-      background-color #cbf
-      font-weight bold
-      color $black2
-    &.notice, &.comingsoon
-      padding 10px 25px 10px 21px
-    &.notice
-      border-left 4px solid $blue1
-      font-weight bold
-    &.comingsoon
-      border-left 4px solid $sunflower
+        color $black2
+      &.notice, &.comingsoon
+        padding 10px 25px 10px 21px
+      &.notice
+        border-left 4px solid $blue1
+        font-weight bold
+      &.comingsoon
+        border-left 4px solid $sunflower
+      &:hover
+        background-color #f6f6f6
+    &.expanded
+      margin 10px 0
+    .extra
+      padding 10px 0
+      border-top 2px dashed #eee
+      .captions
+        padding 0 10px
+        .caption
+          padding-left 25px
+          padding-right 25px
+      .go-detail
+        padding 5px 25px
+        text-align center
+      .group-name
+        margin 0 10px
+        padding 5px
+        border-bottom 2px solid #eee
+        color $text-color2
+        font-size 10pt
   .no-result
     text-align center
     padding 10px 20px
     color $text-color1
+    light-shadow()
 
 
 #pages
-  padding 0 10px
+  padding 5px 10px
   text-align center
+  light-shadow()
   .page
     display inline-block
     padding 5px 10px
@@ -300,6 +329,7 @@ footer
 
 // --- ani detail ---
 #ani-detail
+  light-shadow()
   &.notice
     .header
       border-top 4px solid $blue1
@@ -363,44 +393,11 @@ footer
   .content
     margin 5px 20px
     padding 10px 0
-    .notfound, .caps-loading
-      padding 10px
-      text-align center
-      font-size 10pt
     .group-name
       padding 5px 0 3px
       border-bottom 2px solid #eee
       color $text-color2
       font-size 10pt
-    .captions
-      display table
-      border-collapse collapse
-      width 100%
-      .caption
-        display table-row
-        line-height 150%
-        .episode, .name, .updateat
-          display table-cell
-          &:not(:first-of-type)
-            border-top 1px solid #eee
-        .episode, .name
-          padding 10px 5px
-          color $text-color1
-        .episode
-          width 60px
-          text-align right
-        .updateat
-          text-align right
-          font-size 10pt
-          color $text-color2
-          padding-right 5px
-        &:hover
-          background-color #f6f6f6
-        &.no-url
-          cursor not-allowed
-          .episode, .name
-            text-decoration line-through
-            color lighten($text-color2, 5%)
     .links
       .link
         display block
@@ -424,6 +421,46 @@ footer
   margin 5px 20px
   padding 10px 0
   font-size 10pt
+
+.captions
+  width 100%
+  .caption
+    display block
+    padding 10px 5px
+    &:not(:first-of-type)
+      border-top 1px solid #eee
+    .left
+      float left
+    .right
+      float right
+    .forpadding
+      padding 10px 0
+    .episode
+      color $text-color1
+    .name
+      margin 0 10px
+      color $text-color1
+    .updateat
+      font-size 10pt
+      color $text-color2
+    &:hover
+      background-color #f6f6f6
+    &.no-url
+      cursor not-allowed
+      .episode, .name
+        text-decoration line-through
+        color lighten($text-color2, 5%)
+
+#ani-list
+  .notfound, .caps-loading
+    padding 10px
+    text-align center
+
+#ani-detail
+  .notfound, .caps-loading
+    padding 10px
+    text-align center
+    font-size 10pt
 
 // from http://projects.lukehaas.me/css-loaders/
 .loader:before,
