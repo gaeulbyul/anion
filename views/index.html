@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <meta name="author" content="Zn">
     <meta name="description" content="Ani-ON">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" integrity="sha256-K3Njjl2oe0gjRteXwX01fQD5fkk9JFFBdUHy/h38ggY=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous">
     <link rel="stylesheet" href="css/anion.css">
@@ -15,15 +17,12 @@
   <body>
     <div id="titlebar" class="titlewrap" ng-controller="TitlebarCtrler">
       <div class="titleinwrap">
-        <div class="titlebar">
-            <a id="left-button" class="button" style="visibility:hidden"></a>
-            <!--
-          <a id="left-button" class="button" ng-click="goBack($event)">
-            <img alt="메뉴" height="20" src="img/left.svg">
+        <div class="titlebar" ng-click="toggleMenu($event)">
+          <a href="#" title="뒤로" id="left-button" class="button" ng-click="goBack($event)">
+            <i class="fa fa-arrow-left"></i>
           </a>
-          -->
-          <div class="title"><a href="." target="_self">Ani-ON</a></div>
-          <a href="#" id="right-button" class="button" ng-click="toggleMenu($event)">
+          <div class="title">Ani-ON</div>
+          <a href="#" title="메뉴" id="right-button" class="button" ng-click="toggleMenu($event)">
             <i class="fa fa-bars"></i>
           </a>
         </div>
@@ -85,30 +84,69 @@
       / API: <a href="http://www.anissia.net/?m=3">Anissia</a>
       / code: <a href="https://github.com/zn/anion"><i class="fa fa-github"></i> Github Repo</a>
     </footer>
-    <script type="text/x-template" id="T-anilist">
-      <div id="ani-list" ng-controller="AniListCtrler" ng-init="init()">
-        <a href="#/ani/{{ani.id}}" class="item" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}" ng-repeat="ani in anis">
+
+    <script type="text/x-template" id="T-aniitem">
+      <div class="item" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon, expanded: expanded}">
+        <a href="#" class="basic" ng-click="expand($event, ani)">
           <div class="title" ng-bind-html="ani.title | matchQuery:ani.query | escapeHtml | highlight"></div>
           <div class="info">
             <span class="weekday" ng-if="ani.amode !== 'w'">{{ani.weekday | weekday}}</span>
             <span class="time" ng-if="ani.weekday < 7 && !ani.ended">{{ani.time | time4}}</span>
             <span class="time" ng-if="(ani.weekday === 7 || ani.weekday === 8) && !ani.ended">{{ani.startdate | date8_2}}</span>
-            <span class="time" ng-if="ani.ended">{{ani.startdate | date8}} ~ {{ani.enddate | date8}}</span>
-            <br>
+            <span class="time" ng-if="ani.ended">{{ani.startdate | startdate}}</span>
             <span class="state" ng-if="ani.state">{{ani.state}}</span>
-            <span class="genre" ng-bind-html="ani.genre | genre | matchQuery:ani.genre_query | escapeHtml | highlight"></span>
+            &middot; <span class="genre" ng-bind-html="ani.genre | genre | matchQuery:ani.genre_query | escapeHtml | highlight"></span>
           </div>
         </a>
+        <div class="extra" ng-if="expanded">
+          <div class="group-name">자막</div>
+          <cap-list class="group" aniid="ani.id"></cap-list>
+          <div class="go-detail">
+            <a href="#/ani/{{ani.id}}">자세히 보기 <i class="fa fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="T-caplist">
+      <div class="captions">
+        <a class="caption" href="{{cap.url}}" title="{{cap.url}}" target="_blank" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" ng-repeat="cap in caps track by $index">
+          <div class="left">
+            <span class="episode">{{cap.episode}}화</span>
+            <span class="name">{{cap.name}}</span>
+          </div>
+          <div class="right">
+            <span class="updateat">{{cap.updateat | datetime14}}</span>
+          </div>
+          <div class="forpadding"></div>
+        </a>
+        <div ng-if="caps_loading">
+          <div class="caps-loading">
+            로딩중……
+          </div>
+        </div>
+        <div ng-if="!caps_loading && caps.length === 0">
+          <div class="notfound">
+            자막제작자를 찾을 수 없습니다.
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="T-anilist">
+      <div id="ani-list" ng-controller="AniListCtrler" ng-init="init()">
+        <ani-item ng-repeat="ani in anis"></ani-item>
         <div class="no-result" ng-show="anis.length === 0">
           검색결과가 없습니다.
         </div>
-        <div id="pages" ng-controller="AniListPageCtrler" ng-init="init()">
+        <div id="pages" ng-controller="AniListPageCtrler" ng-init="init()" ng-show="pages.length >= 2">
           <a class="page" ng-if="pages.length >= 2" ng-repeat="page in pages track by $index" ng-click="showPage($event, page)" ng-class="{highlight: page === current_page}">
             {{page}}
           </a>
         </div>
       </div>
     </script>
+
     <script type="text/x-template" id="T-anidetail">
       <div id="ani-detail" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}">
         <div class="loadmsg" ng-show="loading">
@@ -160,36 +198,21 @@
           현재 페이지는 애니시아에서 작성한 공지사항입니다. 자세한 내용은 해당 링크를 클릭해 주세요.
         </div>
         <div class="content" ng-hide="loading">
-          <div class="group-name">자막 ({{caps.length}}명)</div>
-            <div class="group captions">
-              <a class="caption" href="{{cap.url}}" title="{{cap.url}}" target="_blank" ng-class="{'no-url': !cap.url}" ng-click="checklink($event, cap.url)" ng-repeat="cap in caps track by $index">
-                <div class="episode">{{cap.episode}}화</div>
-                <div class="name">{{cap.name}}</div>
-                <div class="updateat">{{cap.updateat | datetime14}}</div>
-              </a>
-              <div ng-if="caps_loading">
-                <div class="caps-loading">
-                  로딩중……
-                </div>
-              </div>
-              <div ng-if="!caps_loading && caps.length === 0">
-                <div class="notfound">
-                  자막제작자를 찾을 수 없습니다.
-                </div>
-              </div>
-            </div>
+          <div class="group-name">자막</div>
+            <cap-list class="group" aniid="ani.id"></cap-list>
             <div ng-if="!ani.notice">
               <div class="group-name">찾아보기</div>
               <div class="group links">
-                <a class="link" href="https://namu.wiki/go/{{ani.title2}}">나무위키에서  찾아보기</a>
-                <a class="link" href="https://librewiki.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">리브레위키에서 찾아보기</a>
-                <a class="link" href="http://wiki-chan.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">위키쨩에서 찾아보기</a>
+                <a class="link" target="_blank" href="https://namu.wiki/go/{{ani.title2}}">나무위키에서  찾아보기</a>
+                <a class="link" target="_blank" href="https://librewiki.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">리브레위키에서 찾아보기</a>
+                <a class="link" target="_blank" href="http://wiki-chan.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">위키쨩에서 찾아보기</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </script>
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js" integrity="sha256-De/cgZoAkgvqoxL9yJpJzPHyozUETFnSv7EQGfQWQ4o=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/locale/ko.js" integrity="sha256-Eaq7jTd0UkE4vrXWiVFSPB28RGxauJur8bCkXU2/vUg=" crossorigin="anonymous"></script>
     <script>moment.locale('ko');</script>
