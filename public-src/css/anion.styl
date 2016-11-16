@@ -21,6 +21,9 @@ light-shadow()
   background-color #fff
   box-shadow 0 2px 4px 0 rgba(160, 160, 160, .8)
 
+transition-background-color()
+  transition .3s background-color
+
 *, *:before, *:after
   box-sizing border-box
 
@@ -84,6 +87,7 @@ hr
   display table
   background-color $black1
   cursor pointer
+  transition-background-color()
   .title
     display table-cell
     width 100%
@@ -149,6 +153,8 @@ footer
       width 90%
       margin 3px auto
       color lighten($black1, 10%)
+    .menu-item
+      transition-background-color()
     .menu-item:hover
       background-color lighten($black1, 5%)
     .menu-main
@@ -184,7 +190,11 @@ footer
       border-radius 3px
       background-color $black2
       color #fff
+      transition .3s border-color
       -webkit-appearance none
+      &:focus
+        outline 0
+        border-color $blue2
     .search-outer
       padding 3px 0
       background-image -webkit-linear-gradient(top, $black1 0%, $black2 100%)
@@ -200,6 +210,7 @@ footer
         border 2px solid lighten($black1, 10%)
         border-radius 3px
         background-color $black2
+        transition .3s border-color
         input, button
           padding 5px
           color #fff
@@ -208,12 +219,12 @@ footer
           background-color transparent
         .query, .submit
           display table-cell
+          :focus
+            outline 0
         .query
           width 95%
           input
             width 100%
-            &:focus
-              outline 0
         .submit
           text-align right
           width 5%
@@ -221,6 +232,12 @@ footer
             font-size 14pt
             padding 0 10px
             color #fff
+            transition .2s transform
+            &:hover, &:focus
+              transform scale(1.2)
+        &.focused
+          border-color $blue2
+          background-color darken($black2, 15%)
 
 .weekdaybar
   display table
@@ -233,6 +250,7 @@ footer
     color #fff
     border-bottom-width 3px
     border-bottom-style solid
+    transition-background-color()
     &.highlight
       border-bottom-color $blue1
       font-weight bold
@@ -254,6 +272,7 @@ footer
     .basic
       display block
       padding 10px 25px
+      transition-background-color()
       .title
         @extend .ellipsis
         font-size medium

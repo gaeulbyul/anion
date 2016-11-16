@@ -78,7 +78,7 @@ var AniONUtils = {
       if (startdate.isValid() && today < ani.startdate) {
         item.comingsoon = startdate.format('ll');
         if (params.amode !== 'd') {
-          item.state = '[' + startdate.format('MM/DD') + ']';
+          item.state = '[방영예정: ' + startdate.format('MM/DD') + ']';
           item.comingsoon = true;
         }
       }
@@ -383,6 +383,7 @@ AniON.controller('TitlebarCtrler', ['$scope', '$location', '$window', 'AniListFa
   //http://stackoverflow.com/q/12618342
   $scope.formdata = {};
   $scope.menuVisible = false;
+  $scope.searchFocused = false;
   $scope.currentWeekday = null;
   $scope.aniGenres = [];
   $scope.goBack = function ($event) {
@@ -397,6 +398,12 @@ AniON.controller('TitlebarCtrler', ['$scope', '$location', '$window', 'AniListFa
     if ($scope.aniGenres.length === 0) {
       AniListFactory.getAniGenres();
     }
+  };
+  $scope.onFocusSearchbar = function ($event) {
+    $scope.searchFocused = true;
+  };
+  $scope.onBlurSearchbar = function ($event) {
+    $scope.searchFocused = false;
   };
   $scope.$on('gotAniList', function (event, params) {
     $scope.menuVisible = false;

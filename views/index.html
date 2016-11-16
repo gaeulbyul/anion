@@ -30,9 +30,9 @@
           <div id="menu" ng-show="menuVisible">
             <div class="search-outer">
               <div id="search">
-                <form id="searchform" ng-submit="searchAniList($event)">
+                <form id="searchform" ng-submit="searchAniList($event)" ng-class="{focused: searchFocused}">
                   <div class="query">
-                    <input type="search" name="q" placeholder="검색" ng-model="formdata.query">
+                    <input type="search" name="q" placeholder="검색" ng-model="formdata.query" ng-focus="onFocusSearchbar($event)" ng-blur="onBlurSearchbar($event)">
                   </div>
                   <div class="submit">
                     <button type="submit"><i class="fa fa-search"></i></button>
