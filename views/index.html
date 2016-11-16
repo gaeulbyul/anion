@@ -86,8 +86,8 @@
     </footer>
 
     <script type="text/x-template" id="T-aniitem">
-      <div class="item" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon, expanded: expanded}">
-        <a href="#" class="basic" ng-click="expand($event, ani)">
+      <div class="item" ng-class="{expanded: expanded}">
+        <a href="#" class="basic" ng-class="{notice: ani.notice, completed: ani.completed, comingsoon: ani.comingsoon}" ng-click="expand($event, ani)">
           <div class="title" ng-bind-html="ani.title | matchQuery:ani.query | escapeHtml | highlight"></div>
           <div class="info">
             <span class="weekday" ng-if="ani.amode !== 'w'">{{ani.weekday | weekday}}</span>
