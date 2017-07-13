@@ -16,7 +16,7 @@
     "buildAsset": "grunt"
   },
   "engines": {
-    "node": "~4.1.x"
+    "node": "~4.x"
   },
   "devDependencies": {
     "eslint": "^3.2.2",
