@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 var morgan = require('morgan');
 var _ = require('underscore');
+var Sequelize = require('sequelize');
 
 var AniONDB = require('./model/aniondb');
 var Anissia = require('./lib/anissia');
@@ -49,9 +50,9 @@ route.get('/api/anilist', function (req, res, next) {
     limit: 30,
   };
   if (req.query.search) {
-    dbquery.where = [
-      'LOWER(title) LIKE LOWER(?)', '%' + req.query.search + '%',
-    ];
+    var lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
+    var lowerTitle = Sequelize.fn('lower', `%${req.query.search}%`);
+    dbquery.where = Sequelize.where(lowerTitleCol, ' LIKE ', lowerTitle);
     dbquery.order = ['weekday', 'index'];
   } else if (req.query.genre) {
     dbquery.where = {
