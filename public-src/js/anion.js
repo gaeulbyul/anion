@@ -226,7 +226,7 @@ var AniON = angular.module('AniON', [
   'MainCtrlers',
 ]);
 
-AniON.config(['$routeProvider', function ($routeProvider) {
+AniON.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       template: document.getElementById('T-anilist').innerHTML,
@@ -245,6 +245,9 @@ AniON.config(['$routeProvider', function ($routeProvider) {
     .otherwise({
       redirectTo: '/',
     });
+  // 2017-11-12: Angular.js v1.6 changed default hashPrefix to '!'
+  // https://github.com/angular/angular.js/commit/aa077e81129c740041438688dff2e8d20c3d7b52
+  $locationProvider.hashPrefix('');
 }]).run(['$location', 'AniListFactory', function ($location, AniListFactory) {
   var path = $location.path();
   if (path === '' || path === '/') {
@@ -257,10 +260,11 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
   var current_query;
   var current_genre;
   return {
-    anis: [],
     recent: {},
     getRecentAniList: function () {
-      this.broadcastAniList(this.recent);
+      if (this.recent.amode) {
+        this.broadcastAniList(this.recent);
+      }
     },
     getAniList: function (weekday, page) {
       var self = this;
@@ -274,12 +278,13 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
       }
       $rootScope.$broadcast('beforeAniList');
       return $http.get('api/anilist/?weekday=' + weekday + '&page=' + page)
-        .success(function (r){
-          self.anis = r.result;
+        .then(function (response){
+          var data = response.data;
           self.broadcastAniList({
+            anis: data.result,
             amode: 'w',
             weekday: weekday,
-            count: r.count,
+            count: data.count,
             page: page,
           });
         });
@@ -300,12 +305,13 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
       }
       $rootScope.$broadcast('beforeAniList');
       return $http.get('api/anilist/?search=' + encodeURIComponent(query) + '&page=' + page)
-        .success(function (r){
-          self.anis = r.result;
+        .then(function (response){
+          var data = response.data;
           self.broadcastAniList({
+            anis: data.result,
             amode: 's',
             query: query,
-            count: r.count,
+            count: data.count,
             page: page,
           });
         });
@@ -322,12 +328,13 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
       }
       $rootScope.$broadcast('beforeAniList');
       return $http.get('api/anilist/?genre=' + encodeURIComponent(genre) + '&page=' + page)
-        .success(function (r){
-          self.anis = r.result;
+        .then(function (response){
+          var data = response.data;
           self.broadcastAniList({
+            anis: data.result,
             amode: 'g',
             genre: genre,
-            count: r.count,
+            count: data.count,
             page: page,
           });
         });
@@ -339,8 +346,9 @@ AniON.factory('AniListFactory', ['$rootScope', '$http', function ($rootScope, $h
     },
     getAniGenres: function () {
       return $http.get('api/genres')
-        .success(function (r) {
-          $rootScope.$broadcast('gotAniGenres', r.sort());
+        .then(function (response) {
+          var data = response.data;
+          $rootScope.$broadcast('gotAniGenres', data.sort());
         });
     },
   };
@@ -356,9 +364,10 @@ AniON.factory('AniDetailFactory', ['$rootScope', '$http', function ($rootScope, 
         url: 'api/ani',
         params: { id: id },
         cache: true,
-      }).success(function (resp) {
-        $rootScope.$broadcast('gotAniDetail', resp);
-        return resp;
+      }).then(function (response) {
+        var data = response.data;
+        $rootScope.$broadcast('gotAniDetail', data);
+        return data;
       });
     },
   };
@@ -374,6 +383,9 @@ AniON.factory('AniCaptionFactory', ['$rootScope', '$http', '$q', function ($root
         url: 'api/cap',
         params: { id: id },
         cache: true,
+      }).then(function (response) {
+        var data = response.data;
+        return data;
       });
     },
   };
@@ -479,8 +491,9 @@ MainCtrlers.controller('AniListCtrler', ['$scope', 'AniListFactory', function ($
     AniListFactory.getRecentAniList();
   };
   $scope.$on('gotAniList', function (event, params) {
-    if (AniListFactory.anis.length > 0) {
-      $scope.anis = AniONUtils.reorderAnis(AniListFactory.anis.map(function (ani) {
+    var anis = params.anis;
+    if (anis.length > 0) {
+      $scope.anis = AniONUtils.reorderAnis(anis.map(function (ani) {
         return AniONUtils.makeItem(ani, params);
       }));
     } else {
@@ -559,7 +572,7 @@ MainCtrlers.directive('capList', ['$window', 'AniCaptionFactory', function ($win
       $scope.caps_loading = true;
       if ($scope.aniID) {
         AniCaptionFactory.getCaptions($scope.aniID)
-          .success(function (caps) {
+          .then(function (caps) {
             $scope.caps_loading = false;
             $scope.caps = caps;
           });
@@ -580,7 +593,7 @@ MainCtrlers.directive('capList', ['$window', 'AniCaptionFactory', function ($win
 MainCtrlers.controller('AniDetailCtrler',
   ['$scope', '$routeParams', '$window', 'aniDetail',
     function ($scope, $routeParams, $window, aniDetail) {
-      $scope.ani = AniONUtils.makeItem(aniDetail.data, {amode: 'd'});
+      $scope.ani = AniONUtils.makeItem(aniDetail, {amode: 'd'});
       $scope.$on('$routeChangeSuccess', function (event) {
         document.getElementById('main').className = 'main-ani-detail';
         $scope.loading = false;
