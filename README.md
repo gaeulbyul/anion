@@ -2,7 +2,7 @@ Ani-ON
 =====
 https://anion.herokuapp.com
 
-Ani-ON은 [애니시아](http://www.anissia.net)의 [애니편성표 API](http://www.anissia.net/?m=1&b=4)를 이용하여 만든 간단한 웹 어플리케이션입니다.
+Ani-ON은 [애니시아](https://www.anissia.net)의 [애니편성표 API](https://www.anissia.net/?m=1&b=4)를 이용하여 만든 간단한 웹 어플리케이션입니다.
 
 특징
 -----
