@@ -1,59 +1,52 @@
 #!/usr/bin/env node
 
-var Anissia = require('../lib/anissia');
-var AniONDB = require('../model/aniondb');
-var config = require('../config');
-var Q = require('q');
+const Anissia = require('../lib/anissia')
+const AniONDB = require('../model/aniondb')
+const config = require('../config')
+const Q = require('q')
+const _ = require('lodash')
 
-var aniondb = new AniONDB(config.database);
+const aniondb = new AniONDB(config.database)
 
-function callback (db) {
-  return function (newlist, dblist) {
-    newlist.forEach(function (ani) {
-      var genres = ani.genres.slice(0); // copy array;
-      ani.genre = ani.genres.join();
-      delete ani.genres;
-      db.Ani.upsert(ani).then(function () {
-        genres.forEach(function (genre) {
-          aniondb.Genre.create({
-            ani_id: ani.id,
-            genre: genre,
-          });
-        });
-      });
-    });
-  };
+async function updateAni(ani) {
+  const genres = ani.genres.slice(0)
+  ani.genre = ani.genres.join()
+  delete ani.genres
+  await aniondb.Ani.upsert(ani)
+  return aniondb.Genre.bulkCreate(
+    genres.map(genre => ({
+      genre,
+      ani_id: ani.id,
+    }))
+  )
 }
 
-aniondb.seq.query('DELETE FROM ani_genres')
-.then(function () {
-  function crawlOneWeekday (weekday) {
-    return Q.all([
-      Anissia.getAnilist(weekday),
-      aniondb.Ani.findAll({
+async function main() {
+  await aniondb.seq.query('DELETE FROM ani_genres')
+  // _.range is exclusive-range
+  for (const weekday of _.range(9)) {
+    const anissiaAnis = await Anissia.getAnilist(weekday)
+    const dbAnis = await aniondb.Ani.findAll({
+      where: {
+        weekday,
         ended: false,
-        weekday: weekday,
-      }),
-    ]).spread(callback(aniondb));
+      },
+    })
+    for (const ani of anissiaAnis) {
+      await updateAni(ani)
+    }
   }
-  var result = Q();
-  for (var weekday = 0; weekday <= 8; weekday++) {
-    result = result.then(crawlOneWeekday.bind(null, weekday));
-  }
-  return result;
-})
-.then(function () {
-  function crawlEndedOnePage (page) {
-    return Q.all([
-      Anissia.getEndedAnilist(page),
-      aniondb.Ani.findAll({
+  for (const page of _.range(15)) {
+    const anissiaAnis = await Anissia.getEndedAnilist(page)
+    const dbAnis = await aniondb.Ani.findAll({
+      where: {
         ended: true,
-      }),
-    ]).spread(callback(aniondb));
+      },
+    })
+    for (const ani of anissiaAnis) {
+      await updateAni(ani)
+    }
   }
-  var result = Q();
-  for (var page = 0; page <= 10; page++) {
-    result = result.then(crawlEndedOnePage.bind(null, page));
-  }
-  return result;
-});
+}
+
+main()
