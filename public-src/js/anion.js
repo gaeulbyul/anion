@@ -47,7 +47,7 @@ var AniONUtils = {
     }
   },
   formatTime: function(time4) {
-    var mtime = moment(time4, 'HHmm')
+    const mtime = moment(time4, 'HHmm')
     if (mtime.isValid()) {
       return mtime.format('A h:mm')
     } else {
@@ -55,8 +55,8 @@ var AniONUtils = {
     }
   },
   makeItem: function(ani, params) {
-    var today = moment().format('YYYYMMDD')
-    var item = {
+    const today = moment().format('YYYYMMDD')
+    const item = {
       id: ani.id,
       weekday: ani.weekday,
       title: ani.title,
@@ -75,8 +75,8 @@ var AniONUtils = {
       completed: false,
       absent: false,
     }
-    var startdate = AniONUtils.parseDate(ani.startdate)
-    var enddate = AniONUtils.parseDate(ani.enddate)
+    const startdate = AniONUtils.parseDate(ani.startdate)
+    const enddate = AniONUtils.parseDate(ani.enddate)
     if (item.weekday < 7) {
       // coming soon
       if (startdate.isValid() && today < ani.startdate) {
@@ -98,8 +98,8 @@ var AniONUtils = {
       }
     }
     item.notice = /anissia\.net/.test(ani.homepage)
-    var title2 = ani.title
-    var word_blacklist = '극장판,OVA,OAD,미방영화,()'
+    let title2 = ani.title
+    const word_blacklist = '극장판,OVA,OAD,미방영화,()'
     title2 = title2.replace(/제?\d+기/, '')
     word_blacklist.split(',').forEach(function(w) {
       title2 = title2.replace(w, '')
@@ -112,11 +112,11 @@ var AniONUtils = {
     return t.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1')
   },
   reorderAnis: function(anilist) {
-    var anis = [],
+    const anis = [],
       anis_completed = [],
       anis_comingsoon = []
     anilist.forEach(function(ani) {
-      var t = anis
+      let t = anis
       if (ani.comingsoon) {
         t = anis_comingsoon
       } else if (ani.completed) {
@@ -124,7 +124,7 @@ var AniONUtils = {
       }
       t.push(ani)
     })
-    var result = anis.concat(anis_comingsoon, anis_completed)
+    const result = anis.concat(anis_comingsoon, anis_completed)
     return result
   },
 }
@@ -159,13 +159,13 @@ angular.module('AniONFilters', []).filter({
   },
   startdate: function() {
     return function(input) {
-      var startdate = AniONUtils.parseDate2(input)
+      const startdate = AniONUtils.parseDate2(input)
       return startdate.format('YYYY년 MM월') + ' 방영'
     }
   },
   datetime14: function() {
     return function(input) {
-      var m = moment(input, 'YYYYMMDDHHmmss')
+      const m = moment(input, 'YYYYMMDDHHmmss')
       if (m.isValid()) {
         // return m.format('YYYY/MM/DD HH:mm:ss');
         return m.format('YYYY/MM/DD A h:mm')
@@ -198,15 +198,15 @@ angular.module('AniONFilters', []).filter({
       if (!word) {
         return input
       }
-      var patt = new RegExp('(' + AniONUtils.escapeRegexp(word) + ')', 'gi')
+      const patt = new RegExp('(' + AniONUtils.escapeRegexp(word) + ')', 'gi')
       return input.replace(patt, '``$1``')
     }
   },
   urlhost: function() {
     return function(input) {
-      var a = document.createElement('a')
+      const a = document.createElement('a')
       a.href = input
-      var host = a.hostname
+      let host = a.hostname
       if (host.length > 25) {
         host = host.substr(0, 25) + '…'
       }
@@ -214,7 +214,7 @@ angular.module('AniONFilters', []).filter({
     }
   },
   escapeHtml: function() {
-    var entityMap = {
+    const entityMap = {
       '&': '&amp;',
       '<': '&lt;',
       '>': '&gt;',
@@ -230,7 +230,7 @@ angular.module('AniONFilters', []).filter({
   },
 })
 
-var AniON = angular.module('AniON', ['ngRoute', 'ngTouch', 'MainCtrlers'])
+const AniON = angular.module('AniON', ['ngRoute', 'ngTouch', 'MainCtrlers'])
 
 AniON.config([
   '$routeProvider',
@@ -249,7 +249,7 @@ AniON.config([
             '$route',
             'AniDetailFactory',
             function($route, AniDetailFactory) {
-              var id = $route.current.params.id
+              const id = $route.current.params.id
               return AniDetailFactory.getAniDetail(id)
             },
           ],
@@ -266,7 +266,7 @@ AniON.config([
   '$location',
   'AniListFactory',
   function($location, AniListFactory) {
-    var path = $location.path()
+    const path = $location.path()
     if (path === '' || path === '/') {
       AniListFactory.getTodayAniList()
     }
@@ -277,9 +277,9 @@ AniON.factory('AniListFactory', [
   '$rootScope',
   '$http',
   function($rootScope, $http) {
-    var current_weekday
-    var current_query
-    var current_genre
+    let current_weekday
+    let current_query
+    let current_genre
     return {
       recent: {},
       getRecentAniList: function() {
@@ -288,7 +288,7 @@ AniON.factory('AniListFactory', [
         }
       },
       getAniList: function(weekday, page) {
-        var self = this
+        const self = this
         if (weekday === -1) {
           weekday = current_weekday
         } else {
@@ -301,7 +301,7 @@ AniON.factory('AniListFactory', [
         return $http
           .get('api/anilist/?weekday=' + weekday + '&page=' + page)
           .then(function(response) {
-            var data = response.data
+            const data = response.data
             self.broadcastAniList({
               anis: data.result,
               amode: 'w',
@@ -312,11 +312,11 @@ AniON.factory('AniListFactory', [
           })
       },
       getTodayAniList: function() {
-        var weekday = new Date().getDay()
+        const weekday = new Date().getDay()
         return this.getAniList(weekday)
       },
       searchAniList: function(query, page) {
-        var self = this
+        const self = this
         if (query === -1) {
           query = current_query
         } else {
@@ -331,7 +331,7 @@ AniON.factory('AniListFactory', [
             'api/anilist/?search=' + encodeURIComponent(query) + '&page=' + page
           )
           .then(function(response) {
-            var data = response.data
+            const data = response.data
             self.broadcastAniList({
               anis: data.result,
               amode: 's',
@@ -342,7 +342,7 @@ AniON.factory('AniListFactory', [
           })
       },
       getByGenreAniList: function(genre, page) {
-        var self = this
+        const self = this
         if (genre === -1) {
           genre = current_genre
         } else {
@@ -357,7 +357,7 @@ AniON.factory('AniListFactory', [
             'api/anilist/?genre=' + encodeURIComponent(genre) + '&page=' + page
           )
           .then(function(response) {
-            var data = response.data
+            const data = response.data
             self.broadcastAniList({
               anis: data.result,
               amode: 'g',
@@ -374,7 +374,7 @@ AniON.factory('AniListFactory', [
       },
       getAniGenres: function() {
         return $http.get('api/genres').then(function(response) {
-          var data = response.data
+          const data = response.data
           $rootScope.$broadcast('gotAniGenres', data.sort())
         })
       },
@@ -396,7 +396,7 @@ AniON.factory('AniDetailFactory', [
           params: { id: id },
           cache: true,
         }).then(function(response) {
-          var data = response.data
+          const data = response.data
           $rootScope.$broadcast('gotAniDetail', data)
           return data
         })
@@ -410,7 +410,7 @@ AniON.factory('AniCaptionFactory', [
   '$http',
   '$q',
   function($rootScope, $http, $q) {
-    var cache = {}
+    const cache = {}
     return {
       getCaptions: function(id) {
         // return $http.get('api/cap/?id=' + id);
@@ -420,7 +420,7 @@ AniON.factory('AniCaptionFactory', [
           params: { id: id },
           cache: true,
         }).then(function(response) {
-          var data = response.data
+          const data = response.data
           return data
         })
       },
@@ -461,7 +461,7 @@ AniON.controller('TitlebarCtrler', [
     }
     $scope.$on('gotAniList', function(event, params) {
       $scope.menuVisible = false
-      var amode = params.amode
+      const amode = params.amode
       if (amode !== 'g') {
         $scope.selectedGenre = ''
       }
@@ -490,7 +490,7 @@ AniON.controller('TitlebarCtrler', [
     $scope.showByGenres = function() {
       document.activeElement.blur()
       $location.path('/')
-      var selectedGenre = $scope.selectedGenre
+      const selectedGenre = $scope.selectedGenre
       if (selectedGenre !== '') {
         AniListFactory.getByGenreAniList(selectedGenre, 1)
       } else {
@@ -531,7 +531,7 @@ AniON.controller('MainViewCtrler', [
   },
 ])
 
-var MainCtrlers = angular.module('MainCtrlers', ['AniONFilters'])
+const MainCtrlers = angular.module('MainCtrlers', ['AniONFilters'])
 
 MainCtrlers.controller('AniListCtrler', [
   '$scope',
@@ -541,7 +541,7 @@ MainCtrlers.controller('AniListCtrler', [
       AniListFactory.getRecentAniList()
     }
     $scope.$on('gotAniList', function(event, params) {
-      var anis = params.anis
+      const anis = params.anis
       if (anis.length > 0) {
         $scope.anis = AniONUtils.reorderAnis(
           anis.map(function(ani) {
@@ -554,13 +554,13 @@ MainCtrlers.controller('AniListCtrler', [
       document.getElementById('main').className = 'main-ani-list'
     })
     $scope.swipeLeft = function($event) {
-      var weekday = $scope.currentWeekday
+      const weekday = $scope.currentWeekday
       if (weekday !== null && weekday <= 6) {
         AniListFactory.getAniList(weekday < 6 ? weekday + 1 : 0)
       }
     }
     $scope.swipeRight = function($event) {
-      var weekday = $scope.currentWeekday
+      const weekday = $scope.currentWeekday
       if (weekday !== null && weekday <= 6) {
         AniListFactory.getAniList(weekday > 0 ? weekday - 1 : 6)
       }
@@ -576,16 +576,16 @@ MainCtrlers.controller('AniListPageCtrler', [
       AniListFactory.getRecentAniList()
     }
     $scope.$on('gotAniList', function(event, params) {
-      var count = params.count
+      const count = params.count
       $scope.current_page = params.page
       $scope.current_listmode = params.amode
       $scope.pages = []
-      for (var p = 1; p <= Math.ceil(count / 30); p++) {
+      for (let p = 1; p <= Math.ceil(count / 30); p++) {
         $scope.pages.push(p)
       }
     })
     $scope.showPage = function($event, page) {
-      var methodname
+      let methodname
       switch ($scope.current_listmode) {
         case 'w':
           methodname = 'getAniList'

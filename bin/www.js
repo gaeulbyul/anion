@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var app = require('../app')
-var config = require('../config')
+const app = require('../app')
+const config = require('../config')
 
 if (config.p_title) {
   process.title = config.p_title
@@ -8,7 +8,7 @@ if (config.p_title) {
 
 app.set('port', config.port || 8081)
 
-var server = app.listen(app.get('port'), function() {
-  var msg = 'Express server listening on port ' + server.address().port
+const server = app.listen(app.get('port'), () => {
+  const msg = 'Express server listening on port ' + server.address().port
   console.log(msg)
 })

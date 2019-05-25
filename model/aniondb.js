@@ -1,4 +1,4 @@
-var Sequelize = require('sequelize')
+const Sequelize = require('sequelize')
 
 function AniONDB(dbconfig) {
   this.seq = new Sequelize(dbconfig.url, {
@@ -7,7 +7,7 @@ function AniONDB(dbconfig) {
       ssl: !!dbconfig.ssl, // http://stackoverflow.com/a/27688357
     },
   })
-  this.seq.authenticate().catch(function(err) {
+  this.seq.authenticate().catch(err => {
     console.error('Error on connection db: %s', err)
   })
   this.Ani = this.seq.define(

@@ -1,15 +1,15 @@
-var path = require('path')
-var express = require('express')
-var morgan = require('morgan')
-var _ = require('underscore')
-var Sequelize = require('sequelize')
+const path = require('path')
+const express = require('express')
+const morgan = require('morgan')
+const _ = require('underscore')
+const Sequelize = require('sequelize')
 
-var AniONDB = require('./model/aniondb')
-var Anissia = require('./lib/anissia')
+const AniONDB = require('./model/aniondb')
+const Anissia = require('./lib/anissia')
 
-var config = require('./config')
+const config = require('./config')
 
-var app = express()
+const app = express()
 
 app.set('trust proxy', true)
 app.set('env', config.env)
@@ -18,13 +18,13 @@ app.use(morgan('dev')) // logger
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-var aniondb = new AniONDB(config.database)
+const aniondb = new AniONDB(config.database)
 
 // anion.herokuapp.com에선 HTTPS 버전으로 리다이렉트
 // http://stackoverflow.com/a/23894573
 if (app.get('env') === 'production') {
-  app.use(function(req, res, next) {
-    var hostname = req.get('Host')
+  app.use((req, res, next) => {
+    const hostname = req.get('Host')
     if (
       req.headers['x-forwarded-proto'] !== 'https' &&
       hostname === 'anion.herokuapp.com'
@@ -35,26 +35,26 @@ if (app.get('env') === 'production') {
   })
 }
 
-var route = express.Router()
+const route = express.Router()
 
-route.get('/', function(req, res) {
+route.get('/', (req, res) => {
   res.status(200).sendFile('index.html', {
     root: __dirname + '/views',
   })
 })
 
-route.get('/api/anilist', function(req, res, next) {
-  var weekday = /\d+/.test(req.query.weekday)
+route.get('/api/anilist', (req, res) => {
+  const weekday = /\d+/.test(req.query.weekday)
     ? Number(req.query.weekday)
     : new Date().getDay()
-  var page = 'page' in req.query ? Number(req.query.page) : 1
-  var dbquery = {
+  const page = 'page' in req.query ? Number(req.query.page) : 1
+  const dbquery = {
     offset: 30 * (page - 1),
     limit: 30,
   }
   if (req.query.search) {
-    var lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'))
-    var lowerTitle = Sequelize.fn('lower', `%${req.query.search}%`)
+    const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'))
+    const lowerTitle = Sequelize.fn('lower', `%${req.query.search}%`)
     dbquery.where = Sequelize.where(lowerTitleCol, ' LIKE ', lowerTitle)
     dbquery.order = ['weekday', 'index']
   } else if (req.query.genre) {
@@ -78,8 +78,8 @@ route.get('/api/anilist', function(req, res, next) {
       dbquery.order = ['index']
     }
   }
-  aniondb.Ani.findAndCountAll(dbquery).then(function(anis) {
-    var result = {
+  aniondb.Ani.findAndCountAll(dbquery).then(anis => {
+    const result = {
       result: anis.rows,
       count: anis.count,
     }
@@ -87,47 +87,48 @@ route.get('/api/anilist', function(req, res, next) {
   })
 })
 
-route.get('/api/genres', function(req, res, next) {
+route.get('/api/genres', (req, res) => {
   aniondb.seq
     .query('SELECT DISTINCT "genre" FROM "ani_genres"', {
       type: AniONDB.Sequelize.QueryTypes.SELECT,
     })
-    .then(function(genres) {
+    .then(genres => {
       return res.status(200).json(_.pluck(genres, 'genre'))
     })
 })
 
-route.get('/api/ani', function(req, res, next) {
-  var aniID = req.query.id
+route.get('/api/ani', (req, res) => {
+  const aniID = req.query.id
   if (!/^\d+$/.test(aniID)) {
     return res.status(400).json({ error: 'invalid id!' })
   }
   aniondb.Ani.find({
     where: { id: aniID },
   }).then(
-    function(ani) {
+    ani => {
       return res.status(200).json(ani)
     },
-    function(err) {
+    err => {
+      console.error(err)
       return res.status(500)
     }
   )
 })
 
-route.get('/api/cap', function(req, res, next) {
-  var aniID = req.query.id
+route.get('/api/cap', (req, res) => {
+  const aniID = req.query.id
   if (!/^\d+$/.test(aniID)) {
     return res.status(400).json({ error: 'invalid id!' })
   }
-  Anissia.getAniCaptions(aniID).then(function(ani) {
+  Anissia.getAniCaptions(aniID).then(ani => {
     return res.status(200).json(ani)
   })
 })
 
 app.use(route)
 
-app.use(function(err, req, res, next) {
-  var resp
+app.use((err, req, res) => {
+  let resp
   if (app.get('env') === 'development') {
     resp = {
       error: err,

@@ -1,4 +1,4 @@
-var env = process.env
+const env = process.env
 
 module.exports = {
   port: env.PORT || env.ANION_PORT || 8081,
