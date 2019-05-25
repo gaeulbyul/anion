@@ -2,27 +2,55 @@
 <html ng-app="AniON">
   <head>
     <title ng-bind="title">Ani-ON</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta name="author" content="가을별 (Gaeulbyul)">
-    <meta name="description" content="Ani-ON: 모바일 웹 브라우저를 위한 애니편성표">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" integrity="sha256-K3Njjl2oe0gjRteXwX01fQD5fkk9JFFBdUHy/h38ggY=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/anion.css">
-    <link rel="apple-touch-icon" href="img/anion.png">
-    <link rel="icon" href="img/anion.png">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <meta name="author" content="가을별 (Gaeulbyul)" />
+    <meta
+      name="description"
+      content="Ani-ON: 모바일 웹 브라우저를 위한 애니편성표"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"
+      integrity="sha256-K3Njjl2oe0gjRteXwX01fQD5fkk9JFFBdUHy/h38ggY="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css"
+      integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/anion.css" />
+    <link rel="apple-touch-icon" href="img/anion.png" />
+    <link rel="icon" href="img/anion.png" />
   </head>
   <body>
     <div id="titlebar" class="titlewrap" ng-controller="TitlebarCtrler">
       <div class="titleinwrap">
         <div class="titlebar" ng-click="toggleMenu($event)">
-          <a href="#" title="뒤로" id="left-button" class="button" ng-click="goBack($event)">
+          <a
+            href="#"
+            title="뒤로"
+            id="left-button"
+            class="button"
+            ng-click="goBack($event)"
+          >
             <i class="fa fa-arrow-left"></i>
           </a>
           <div class="title">Ani-ON</div>
-          <a href="#" title="메뉴" id="right-button" class="button" ng-click="toggleMenu($event)">
+          <a
+            href="#"
+            title="메뉴"
+            id="right-button"
+            class="button"
+            ng-click="toggleMenu($event)"
+          >
             <i class="fa fa-bars"></i>
           </a>
         </div>
@@ -30,9 +58,20 @@
           <div id="menu" ng-show="menuVisible">
             <div class="search-outer">
               <div id="search">
-                <form id="searchform" ng-submit="searchAniList($event)" ng-class="{focused: searchFocused}">
+                <form
+                  id="searchform"
+                  ng-submit="searchAniList($event)"
+                  ng-class="{focused: searchFocused}"
+                >
                   <div class="query">
-                    <input type="search" name="q" placeholder="검색" ng-model="formdata.query" ng-focus="onFocusSearchbar($event)" ng-blur="onBlurSearchbar($event)">
+                    <input
+                      type="search"
+                      name="q"
+                      placeholder="검색"
+                      ng-model="formdata.query"
+                      ng-focus="onFocusSearchbar($event)"
+                      ng-blur="onBlurSearchbar($event)"
+                    />
                   </div>
                   <div class="submit">
                     <button type="submit"><i class="fa fa-search"></i></button>
@@ -41,32 +80,99 @@
               </div>
             </div>
             <div class="menu-main">
-              <select id="ani-genres-select" ng-model="selectedGenre" ng-change="showByGenres($event)">
+              <select
+                id="ani-genres-select"
+                ng-model="selectedGenre"
+                ng-change="showByGenres($event)"
+              >
                 <option value="" selected>장르별 목록 ▼</option>
-                <option ng-repeat="genre in aniGenres track by $index" value="{{genre}}">
+                <option
+                  ng-repeat="genre in aniGenres track by $index"
+                  value="{{genre}}"
+                >
                   {{ genre }}
                 </option>
               </select>
             </div>
             <div class="menu-anilist-more">
               <div style="display:table-row">
-                <a href="#/" class="menu-item" ng-class="{highlight: currentWeekday === 7}" ng-click="showWeekday($event, 7)">외전/극장판</a>
+                <a
+                  href="#/"
+                  class="menu-item"
+                  ng-class="{highlight: currentWeekday === 7}"
+                  ng-click="showWeekday($event, 7)"
+                  >외전/극장판</a
+                >
                 <div class="divider"></div>
-                <a href="#/" class="menu-item" ng-class="{highlight: currentWeekday === 8}" ng-click="showWeekday($event, 8)">신작</a>
+                <a
+                  href="#/"
+                  class="menu-item"
+                  ng-class="{highlight: currentWeekday === 8}"
+                  ng-click="showWeekday($event, 8)"
+                  >신작</a
+                >
                 <div class="divider"></div>
-                <a href="#/" class="menu-item" ng-class="{highlight: currentWeekday === 9}" ng-click="showWeekday($event, 9)">종영</a>
+                <a
+                  href="#/"
+                  class="menu-item"
+                  ng-class="{highlight: currentWeekday === 9}"
+                  ng-click="showWeekday($event, 9)"
+                  >종영</a
+                >
               </div>
             </div>
-            <hr class="divider">
+            <hr class="divider" />
           </div>
           <nav class="weekdaybar">
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 0}" ng-click="showWeekday($event, 0)">일</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 1}" ng-click="showWeekday($event, 1)">월</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 2}" ng-click="showWeekday($event, 2)">화</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 3}" ng-click="showWeekday($event, 3)">수</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 4}" ng-click="showWeekday($event, 4)">목</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 5}" ng-click="showWeekday($event, 5)">금</a>
-            <a href="#/" class="weekday" ng-class="{highlight: currentWeekday === 6}" ng-click="showWeekday($event, 6)">토</a>
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 0}"
+              ng-click="showWeekday($event, 0)"
+              >일</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 1}"
+              ng-click="showWeekday($event, 1)"
+              >월</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 2}"
+              ng-click="showWeekday($event, 2)"
+              >화</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 3}"
+              ng-click="showWeekday($event, 3)"
+              >수</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 4}"
+              ng-click="showWeekday($event, 4)"
+              >목</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 5}"
+              ng-click="showWeekday($event, 5)"
+              >금</a
+            >
+            <a
+              href="#/"
+              class="weekday"
+              ng-class="{highlight: currentWeekday === 6}"
+              ng-click="showWeekday($event, 6)"
+              >토</a
+            >
           </nav>
         </div>
       </div>
@@ -75,14 +181,28 @@
       <div id="loading" ng-show="loading">
         <div class="loader"></div>
       </div>
-      <ng-view ng-swipe-left="swipeLeft($event)" ng-swipe-right="swipeRight($event)"></ng-view>
+      <ng-view
+        ng-swipe-left="swipeLeft($event)"
+        ng-swipe-right="swipeRight($event)"
+      ></ng-view>
     </main>
     <footer>
-      <noscript class="warning">현재 자바스크립트가 꺼져있거나, 지원하지 않는 웹 브라우저라서 기능이 동작하지 않을 수 있습니다.<br><a href="https://www.enable-javascript.com/ko/">자바스크립트를 켜주세요.</a></noscript>
-      Ani-ON: 모바일 웹 브라우저를 위한 애니편성표<br>
-      by <a href="https://twitter.com/gaeulbyul"><i class="fa fa-twitter"></i> @gaeulbyul</a>
-      / API: <a href="https://www.anissia.net/?m=3">Anissia</a>
-      / code: <a href="https://github.com/zn/anion"><i class="fa fa-github"></i> Github Repo</a>
+      <noscript class="warning"
+        >현재 자바스크립트가 꺼져있거나, 지원하지 않는 웹 브라우저라서 기능이
+        동작하지 않을 수 있습니다.<br /><a
+          href="https://www.enable-javascript.com/ko/"
+          >자바스크립트를 켜주세요.</a
+        ></noscript
+      >
+      Ani-ON: 모바일 웹 브라우저를 위한 애니편성표<br />
+      by
+      <a href="https://twitter.com/gaeulbyul"
+        ><i class="fa fa-twitter"></i> @gaeulbyul</a
+      >
+      / API: <a href="https://www.anissia.net/?m=3">Anissia</a> / code:
+      <a href="https://github.com/zn/anion"
+        ><i class="fa fa-github"></i> Github Repo</a
+      >
     </footer>
 
     <script type="text/x-template" id="T-aniitem">
@@ -205,7 +325,7 @@
               <div class="group links">
                 <a class="link" target="_blank" href="https://namu.wiki/go/{{ani.title2}}">나무위키에서  찾아보기</a>
                 <a class="link" target="_blank" href="https://librewiki.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">리브레위키에서 찾아보기</a>
-                <a class="link" target="_blank" href="http://wiki-chan.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">위키쨩에서 찾아보기</a>
+                <a class="link" target="_blank" href="https://wiki-chan.net/index.php?title=%ED%8A%B9%EC%88%98%3A%EA%B2%80%EC%83%89&amp;search={{ani.title2}}">위키쨩에서 찾아보기</a>
               </div>
             </div>
           </div>
@@ -213,13 +333,34 @@
       </div>
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js" integrity="sha256-DYyWoZ81AkDpPAJcZqoKFkhTnt5EV74MlgFi8yEr0lc=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/locale/ko.js" integrity="sha256-52Xn0wi4kPGcROqCAA5EoontBDks09MLjv7fd5WAj3U=" crossorigin="anonymous"></script>
-    <script>moment.locale('ko');</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js" integrity="sha256-zBy1l2WBAh2vPF8rnjFMUXujsfkKjya0Jy5j6yKj0+Q=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.min.js" integrity="sha256-E6XubcgT4a601977ZZP4Yw/0UCB2/Ex+Bazst+JRw1U=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-touch.min.js" integrity="sha256-ory4sRbIy6SmKRkYoaT7ywzurVbGGQdy6LKJxxah990=" crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+      integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/ko.js"
+      integrity="sha256-qkVUOqyWLNnWgXE3Xd2HmUE9GQ/4Z6zRSk3P7JYAAOk="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      moment.locale('ko')
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"
+      integrity="sha256-23hi0Ag650tclABdGCdMNSjxvikytyQ44vYGo9HyOrU="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular-route.min.js"
+      integrity="sha256-jZRUyy674QanjfVAn9YBW+d1iuxj8csDOxrwS35/GLo="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular-touch.min.js"
+      integrity="sha256-8pPg4jDosgTykEazR+DxLjTDZ7X8jOoIP+SeX+N2M0k="
+      crossorigin="anonymous"
+    ></script>
     <script src="js/anion.min.js"></script>
   </body>
 </html>
-

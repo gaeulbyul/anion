@@ -669,16 +669,6 @@ MainCtrlers.controller('AniDetailCtrler', [
     $scope.$on('$routeChangeSuccess', function(event) {
       document.getElementById('main').className = 'main-ani-detail'
       $scope.loading = false
-      /*
-        AniDetailFactory.getAniDetail(id)
-          .success(function (ani) {
-            $scope.ani = AniONUtils.makeItem(ani, {amode: 'd'});
-          })
-          .error(function (r) {
-            alert('찾을 수 없습니다!');
-            $window.history.back();
-          });
-        */
     })
   },
 ])
