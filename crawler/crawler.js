@@ -36,6 +36,7 @@ async function main() {
       await updateAni(ani)
     }
   }
+  /* TODO
   for (const page of _.range(15)) {
     const anissiaAnis = await Anissia.getEndedAnilist(page)
     const dbAnis = await aniondb.Ani.findAll({
@@ -47,6 +48,7 @@ async function main() {
       await updateAni(ani)
     }
   }
+  */
 }
 
 main()

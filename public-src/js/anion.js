@@ -3,16 +3,16 @@
 
 var AniONUtils = {
   parseDate: function(date8) {
-    if (date8.indexOf('999999') > -1 || date8.indexOf('000') > -1) {
+    if (date8.indexOf('9999-99') > -1 || date8.indexOf('000') > -1) {
       return moment(null)
     }
-    return moment(date8, 'YYYYMMDD')
+    return moment(date8, 'YYYY-MM-DD')
   },
   parseDate2: function(date8) {
-    if (date8.indexOf('999999') > -1 || date8.indexOf('000') > -1) {
+    if (date8.indexOf('9999-99') > -1 || date8.indexOf('000') > -1) {
       return moment(null)
     }
-    return moment(date8, 'YYYYMMDD YYYYMM YYYY'.split(' '))
+    return moment(date8, 'YYYY-MM-DD YYYY-MM YYYY'.split(' '))
   },
   formatDate: function(date8m) {
     if (typeof date8m === 'string') {
@@ -47,7 +47,7 @@ var AniONUtils = {
     }
   },
   formatTime: function(time4) {
-    const mtime = moment(time4, 'HHmm')
+    const mtime = moment(time4, 'HH:mm')
     if (mtime.isValid()) {
       return mtime.format('A h:mm')
     } else {
@@ -55,7 +55,7 @@ var AniONUtils = {
     }
   },
   makeItem: function(ani, params) {
-    const today = moment().format('YYYYMMDD')
+    const today = moment().format('YYYY-MM-DD')
     const item = {
       id: ani.id,
       weekday: ani.weekday,
@@ -165,7 +165,7 @@ angular.module('AniONFilters', []).filter({
   },
   datetime14: function() {
     return function(input) {
-      const m = moment(input, 'YYYYMMDDHHmmss')
+      const m = moment(input, 'YYYY-MM-DD HH:mm:ss')
       if (m.isValid()) {
         // return m.format('YYYY/MM/DD HH:mm:ss');
         return m.format('YYYY/MM/DD A h:mm')

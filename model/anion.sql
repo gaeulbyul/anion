@@ -4,13 +4,13 @@ CREATE TABLE "ani" (
   "index" INTEGER DEFAULT 0,
   "weekday" INTEGER,
   "title" TEXT NOT NULL,
-  "time" CHAR(4) DEFAULT '0000',
+  "time" CHAR(10) DEFAULT '0000-00-00',
   "ended" BOOLEAN DEFAULT False,
   "genre" TEXT,
   "homepage" TEXT,
   "broaded" BOOLEAN,
-  "startdate" CHAR(8) DEFAULT '00000000',
-  "enddate" CHAR(8) DEFAULT '00000000'
+  "startdate" CHAR(10) DEFAULT '0000-00-00',
+  "enddate" CHAR(10) DEFAULT '0000-00-00'
 );
 DROP TABLE IF EXISTS "ani_genres";
 CREATE TABLE "ani_genres" (
