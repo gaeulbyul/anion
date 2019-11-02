@@ -44,7 +44,7 @@
     "q": "^1.2.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "sequelize": "^4.44.3",
+    "sequelize": "^5.15.1",
     "underscore": "^1.8"
   },
   "optionalDependencies": {
